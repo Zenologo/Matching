@@ -1,5 +1,5 @@
-Imports classes_xml_generees.LibRechProfil
-Imports classes_xml_generees.LibRechProfil.Referentiel
+'Imports classes_xml_generees.LibRechProfil
+'Imports classes_xml_generees.LibRechProfil.Referentiel
 
 Imports classes_xml_generees.LibRechCandidat
 Imports classes_xml_generees.LibRechCandidat.Referentiel
@@ -48,7 +48,7 @@ Namespace LibRechProfil
 
         End Sub
 
-        Public Function GetXML(ByVal lMapping As entite.MappingVacancy) As String
+        Public Function GetXML(ByVal lMapping As entite.MappingVacancy.vacancyMatching) As String
 
             ' languageField As String
             Me.Ajouter_Language(lMapping.language)
@@ -75,13 +75,11 @@ Namespace LibRechProfil
             Me.Ajouter_NumberOfOpenings(lMapping.number_of_opening)
 
             'Private mOrganization As Organization
-            Me.Ajouter_Organization_adresse(lMapping.organization.addresse)
-            Me.Ajouter_Organization_Name(lMapping.organization.name)
-            Me.Ajouter_Organization_Phone(lMapping.organization.phone)
-            Me.Ajouter_Organization_Email(lMapping.organization.email)
-            Me.Ajouter_Organization_Website(lMapping.organization.website)
-            Me.Ajouter_Organization_ContractPerson(lMapping.organization.contact_person)
-            Me.Ajouter_Organization_Industry(lMapping.organization.industry)
+            Me.mOrganization = Me.GetOrganization(lMapping.organization.name, lMapping.organization.addresse,
+                                                   lMapping.organization.phone, lMapping.organization.email,
+                                                   lMapping.organization.fax, lMapping.organization.website,
+                                                   lMapping.organization.contact_person, lMapping.organization.industry)
+
 
             'Private mCandidateRequirements As CandidateRequirements
 
@@ -93,7 +91,20 @@ Namespace LibRechProfil
             Me.mVacancyText = lMapping.vacancy_text
 
             'Private mUserArea As UserArea
-            Me.Ajouter_UserArea_DossierComplet(lMapping.user_area.dossier_complet.priorite, lMapping.user_area.dossier_complet.flag)
+
+            Me.mUserArea = New classes_xml_generees.LibRechCandidat.UserArea
+            Me.mUserArea.dossier_complet = Me.GetUserArea_DossierComplet(lMapping.user_area.dossier_complet.priorite, lMapping.user_area.dossier_complet.flag)
+
+
+            'Dim dossier As classes_xml_generees.LibRechCandidat.CritereFlag = Me.GetUserArea_DossierComplet(lMapping.user_area.dossier_complet.priorite, lMapping.user_area.dossier_complet.flag
+            'Me.mUserArea.dossier_complet = dossier
+
+
+
+
+
+
+
             Me.Ajouter_UserArea_Qualification(lMapping.user_area.qualification.code, lMapping.user_area.qualification.libelle, lMapping.user_area.qualification.priorite)
             Me.Ajouter_UserArea_ContractType(lMapping.user_area.contract_type.code, lMapping.user_area.contract_type.libelle, lMapping.user_area.contract_type.priorite)
             Me.Ajouter_UserArea_NiveauEtude(lMapping.user_area.niveau_etude.code, lMapping.user_area.niveau_etude.libelle, lMapping.user_area.niveau_etude.priorite)
@@ -104,9 +115,35 @@ Namespace LibRechProfil
 
             Me.Ajouter_UserArea_DateDebut(lMapping.user_area.date_debut.priorite, lMapping.user_area.date_debut.date_critere)
 
-            Me.ajouter_userArea_Permis(lMapping.user_area.permis.priorite, lMapping.user_area.permis.libelle, lMapping.user_area.permis.code)
+            Me.Ajouter_UserArea_Permis(lMapping.user_area.permis.priorite, lMapping.user_area.permis.libelle, lMapping.user_area.permis.code)
 
+            Me.Ajouter_UserArea_Competence(lMapping.user_area.competence)
 
+            Me.Ajouter_UserArea_AnneeExperience(lMapping.user_area.annees_experience)
+
+            Me.Ajouter_UserArea_Client(lMapping.user_area.client)
+
+            Me.Ajouter_UserArea_Service(lMapping.user_area.service)
+
+            Me.Ajouter_UserArea_Secteur(lMapping.user_area.secteur)
+
+            Me.Ajouter_UserArea_Regroupement(lMapping.user_area.regroupement)
+
+            Me.Ajouter_UserArea_Habilitation(lMapping.user_area.habilitation)
+
+            Me.Ajouter_UserArea_Language(lMapping.user_area.langue)
+
+            Me.Ajouter_UserArea_StatutCDITT(lMapping.user_area.statut_cdi_tt)
+
+            Me.Ajouter_UserArea_TT400H(lMapping.user_area.tt_400h)
+
+            Me.Ajouter_UserArea_FSPI(lMapping.user_area.fspi)
+
+            Me.Ajouter_UserArea_Compte(lMapping.user_area.compte)
+
+            Me.Ajouter_UserArea_AdresseDelegation(lMapping.user_area.addresse_delegation)
+
+            Me.Ajouter_UserArea_Commune(lMapping.user_area.cp_commune)
 
             Me.ConsoliderDate()
 
@@ -145,15 +182,42 @@ Namespace LibRechProfil
         End Sub
 
         Private Sub Ajouter_NumberOfOpenings(ByVal numberOfOpening As String)
-            Me.mNumberOfOpenings = numberOfOpening
+            If numberOfOpening = Nothing Then
+
+                Me.mNumberOfOpenings = ""
+            Else
+                Me.mNumberOfOpenings = numberOfOpening
+            End If
+
         End Sub
+
+
+        Private Function GetOrganization(ByVal name As String, ByVal adress As String, ByVal phone As String,
+                                          ByVal email As String, ByVal fax As String, ByVal website As String,
+                                          ByVal contact As String, ByVal industry As String) As classes_xml_generees.LibRechCandidat.Organization
+            Dim pRef As New classes_xml_generees.LibRechCandidat.Organization
+            pRef.Name = name
+            pRef.Address = adress
+            pRef.Phone = phone
+            pRef.Email = email
+            pRef.Fax = fax
+            pRef.Website = website
+            pRef.ContactPerson = contact
+            pRef.Industry = industry
+            Return pRef
+        End Function
 
         Private Sub Ajouter_Organization_Name(ByVal name As String)
             Me.mOrganization.Name = name
         End Sub
 
         Private Sub Ajouter_Organization_adresse(ByVal adresse As String)
-            Me.mOrganization.Address = adresse
+            If adresse = Nothing Then
+                Me.mOrganization.Address = ""
+            Else
+                Me.mOrganization.Address = adresse
+            End If
+
         End Sub
 
         Private Sub Ajouter_Organization_Phone(ByVal phone As String)
@@ -180,10 +244,14 @@ Namespace LibRechProfil
             Me.mOrganization.Industry = industry
         End Sub
 
-        Private Sub Ajouter_UserArea_DossierComplet(ByVal flag As Boolean, ByVal priorite As Integer)
-            Me.mUserArea.dossier_complet.priorite = priorite
-            Me.mUserArea.dossier_complet.flag = flag
-        End Sub
+        Private Function GetUserArea_DossierComplet(ByVal flag As Boolean, ByVal priorite As Integer) As classes_xml_generees.LibRechCandidat.CritereFlag
+            Dim dossier As New classes_xml_generees.LibRechCandidat.CritereFlag
+            dossier.flag = flag
+            dossier.priorite = priorite
+            dossier.flagSpecified = True
+            dossier.prioriteSpecified = True
+            Return dossier
+        End Function
 
         Private Sub Ajouter_UserArea_Qualification(ByVal code As String, ByVal libelle As String, priorite As Integer)
             Dim lRf As New classes_xml_generees.LibRechCandidat.CritereReferentiel
@@ -212,7 +280,7 @@ Namespace LibRechProfil
             Me.mUserArea.metier.priorite = priorite
         End Sub
 
-        Private Sub Ajouter_UserArea_Mobilite(ByVal mobilites() As entite.MappingVacancy.userArea.CritereReferentiel)
+        Private Sub Ajouter_UserArea_Mobilite(ByVal mobilites() As entite.MappingVacancy.vacancyMatching.userArea.CritereReferentiel)
             Dim lMobiliteLength = mobilites.Length
             Dim lMobilite() As classes_xml_generees.LibRechCandidat.CritereReferentiel = New classes_xml_generees.LibRechCandidat.CritereReferentiel(lMobiliteLength) {}
             For index As Integer = 0 To lMobiliteLength - 1
@@ -230,21 +298,137 @@ Namespace LibRechProfil
             Me.mUserArea.permis = Me.GetCritereReferentiel(code, libelle, priorite)
         End Sub
 
+        Private Sub Ajouter_UserArea_Competence(ByVal competences() As entite.MappingVacancy.vacancyMatching.userArea.CritereReferentiel)
+            Dim lCompetenceLength = competences.Length
+            Dim lCompetence() As classes_xml_generees.LibRechCandidat.CritereReferentiel = New classes_xml_generees.LibRechCandidat.CritereReferentiel(lCompetenceLength) {}
+
+            For index As Integer = 0 To lCompetenceLength - 1
+                lCompetence(index) = Me.GetCritereReferentiel(competences(index).code, competences(index).libelle, competences(index).priorite)
+            Next
+
+            Me.mUserArea.competence = lCompetence
+        End Sub
+
+
+        Private Sub Ajouter_UserArea_AnneeExperience(ByVal anneeExperience As entite.MappingVacancy.vacancyMatching.userArea.CritereFloat)
+            Me.mUserArea.annees_experience = Me.GetCritereFloat(anneeExperience.nombre, anneeExperience.priorite)
+        End Sub
+
+
+        Private Sub Ajouter_UserArea_Client(ByVal client As entite.MappingVacancy.vacancyMatching.userArea.CritereReferentiel)
+            Me.mUserArea.client = Me.GetCritereReferentiel(client.code, client.libelle, client.priorite)
+        End Sub
+
+        Private Sub Ajouter_UserArea_Secteur(ByVal secteur As entite.MappingVacancy.vacancyMatching.userArea.CritereReferentiel)
+            Me.mUserArea.secteur = Me.GetCritereReferentiel(secteur.code, secteur.libelle, secteur.priorite)
+        End Sub
+
+        Private Sub Ajouter_UserArea_Service(ByVal service As entite.MappingVacancy.vacancyMatching.userArea.CritereReferentiel)
+            Me.mUserArea.service = Me.GetCritereReferentiel(service.code, service.libelle, service.priorite)
+        End Sub
+
+        Private Sub Ajouter_UserArea_Regroupement(ByVal regroupement As entite.MappingVacancy.vacancyMatching.userArea.CritereReferentiel)
+            Me.mUserArea.regroupement = Me.GetCritereReferentiel(regroupement.code, regroupement.libelle, regroupement.priorite)
+        End Sub
+
+
+        Private Sub Ajouter_UserArea_Diplome(ByVal diplome As entite.MappingVacancy.vacancyMatching.userArea.DiplomeReferentiel)
+            Me.mUserArea.diplome = Me.GetCritereDiplome(diplome.code, diplome.libelle, diplome.priorite, diplome.obtenu)
+        End Sub
+
+
+        Private Sub Ajouter_UserArea_Habilitation(ByVal habilitation() As entite.MappingVacancy.vacancyMatching.userArea.HabilitationReferentiel)
+            Dim lHabilitationLength = habilitation.Length
+            Dim lHabilitation() As classes_xml_generees.LibRechCandidat.CritereHabilitation = New classes_xml_generees.LibRechCandidat.CritereHabilitation(lHabilitationLength) {}
+
+            For index As Integer = 0 To lHabilitationLength
+                lHabilitation(index) = Me.GetCritereHabilitation(habilitation(index).code, habilitation(index).libelle, habilitation(index).priorite, habilitation(index).date_de_validite)
+            Next
+
+            Me.mUserArea.habilitation = lHabilitation
+        End Sub
+
+
+        Private Sub Ajouter_UserArea_Language(ByVal langues() As entite.MappingVacancy.vacancyMatching.userArea.CritereReferentiel)
+            Dim lLangueLength = langues.Length
+            Dim lLangue() As classes_xml_generees.LibRechCandidat.CritereReferentiel = New classes_xml_generees.LibRechCandidat.CritereReferentiel(lLangueLength) {}
+
+            For index As Integer = 0 To lLangueLength
+                lLangue(index) = Me.GetCritereReferentiel(langues(index).code, langues(index).libelle, langues(index).priorite)
+            Next
+
+            Me.mUserArea.langue = lLangue
+        End Sub
+
+        Private Sub Ajouter_UserArea_VisiteMedicale(ByVal visite As entite.MappingVacancy.vacancyMatching.userArea.CritereDate)
+            Me.mUserArea.visite_medicale_a_jour = Me.GetCritereDate(visite.date_critere, visite.priorite)
+        End Sub
+
+        Private Sub Ajouter_UserArea_StatutCDITT(ByVal statut As entite.MappingVacancy.vacancyMatching.userArea.CritereFlag)
+            Me.mUserArea.statut_cdi_tt = Me.GetCritereFlag(statut.flag, statut.priorite)
+        End Sub
+
+        Private Sub Ajouter_UserArea_TT400H(ByVal pRef As entite.MappingVacancy.vacancyMatching.userArea.CritereFlag)
+            Me.mUserArea.tt_400h = Me.GetCritereFlag(pRef.flag, pRef.priorite)
+        End Sub
+
+        Private Sub Ajouter_UserArea_FSPI(ByVal pRef As entite.MappingVacancy.vacancyMatching.userArea.CritereFlag)
+            Me.mUserArea.fspi = Me.GetCritereFlag(pRef.flag, pRef.priorite)
+        End Sub
+
+        Private Sub Ajouter_UserArea_Compte(ByVal pRef As entite.MappingVacancy.vacancyMatching.userArea.compteMatching)
+            Me.mUserArea.compte = Me.GetCritereCompte(pRef.matricule_cli, pRef.nom, pRef.sigle)
+        End Sub
+
+        Private Sub Ajouter_UserArea_AdresseDelegation(ByVal pRef As entite.MappingVacancy.vacancyMatching.userArea.AdresseReferentiel)
+            Me.mUserArea.adresse_delegation = Me.GetAdresseDelegation(pRef.ligne1, pRef.ligne2, pRef.ligne3, pRef.ligne4, pRef.latitude, pRef.longitude, pRef.priorite)
+        End Sub
+
+        Private Sub Ajouter_UserArea_Commune(ByVal pRef As entite.MappingVacancy.vacancyMatching.userArea.Referentiel)
+            Me.mUserArea.cp_commune = Me.GetReferentiel(pRef.code, pRef.libelle)
+        End Sub
 
 
 
+        Private Function GetAdresseDelegation(ByVal ligne1 As String, ByVal ligne2 As String, ByVal ligne3 As String, ByVal ligne4 As String, ByVal latitude As String, ByVal longitude As String, ByVal priotite As Integer) As classes_xml_generees.LibRechCandidat.Adresse
+            Dim pRef As New classes_xml_generees.LibRechCandidat.Adresse
+            pRef.ligne1 = ligne1
+            pRef.ligne2 = ligne2
+            pRef.ligne3 = ligne3
+            pRef.ligne4 = ligne4
+            pRef.latitude = latitude
+            pRef.longitude = longitude
+            pRef.priorite = priotite
+            Return pRef
+        End Function
+        Private Function GetCritereCompte(ByVal matricule As String, ByVal nom As String, ByVal sigle As String) As classes_xml_generees.LibRechCandidat.Compte
+            Dim lCompte As New classes_xml_generees.LibRechCandidat.Compte()
+            lCompte.matriculeCli = matricule
+            lCompte.nom = nom
+            lCompte.sigle = sigle
+            Return lCompte
+        End Function
 
-
-
-
-
-        Private Function GetCritereReferentiel(ByVal pCode As String, ByVal pLibelle As String, ByVal pPriorite As Integer) As classes_xml_generees.LibRechCandidat.CritereReferentiel
-            Dim lRef As New classes_xml_generees.LibRechCandidat.CritereReferentiel()
+        Private Function GetCritereHabilitation(ByVal pCode As String, ByVal pLibelle As String, ByVal pPriorite As Integer, ByVal pDate As Date) As classes_xml_generees.LibRechCandidat.CritereHabilitation
+            Dim lRef As New classes_xml_generees.LibRechCandidat.CritereHabilitation()
             lRef.priorite = pPriorite
             lRef.code = pCode
             lRef.libelle = pLibelle
+            lRef.date_de_validite = pDate
             Return lRef
         End Function
+
+
+        Private Function GetCritereDiplome(ByVal pCode As String, ByVal pLibelle As String, ByVal pPriorite As Integer, ByVal pObtenu As Boolean) As classes_xml_generees.LibRechCandidat.CritereDiplome
+            Dim lRef As New classes_xml_generees.LibRechCandidat.CritereDiplome()
+            lRef.priorite = pPriorite
+            lRef.code = pCode
+            lRef.libelle = pLibelle
+            lRef.obtenu = pObtenu
+            Return lRef
+        End Function
+
+
 
         Private Function GetCritereFloat(ByVal pNombre As Single, ByVal pPriorite As Integer) As classes_xml_generees.LibRechCandidat.CritereFloat
             Dim lCritereFloat As New classes_xml_generees.LibRechCandidat.CritereFloat()
@@ -274,6 +458,21 @@ Namespace LibRechProfil
             Return lCritereFlag
         End Function
 
+        Private Function GetReferentiel(ByVal code As String, ByVal libelle As String) As classes_xml_generees.LibRechCandidat.Referentiel
+            Dim lRef As New classes_xml_generees.LibRechCandidat.Referentiel
+            lRef.code = code
+            lRef.libelle = libelle
+            Return lRef
+        End Function
+
+        Private Function GetCritereReferentiel(ByVal pCode As String, ByVal pLibelle As String, ByVal pPriorite As Integer) As classes_xml_generees.LibRechCandidat.CritereReferentiel
+            Dim lRef As New classes_xml_generees.LibRechCandidat.CritereReferentiel()
+            lRef.priorite = pPriorite
+            lRef.code = pCode
+            lRef.libelle = pLibelle
+            Return lRef
+        End Function
+
         Private Function GetCritereReferentiel(ByVal critereReferentiel As classes_xml_generees.LibRechCandidat.CritereReferentiel)
             Dim ref = New classes_xml_generees.LibRechCandidat.CritereReferentiel
             ref.code = critereReferentiel.code
@@ -290,326 +489,5 @@ Namespace LibRechProfil
 
 
     '---------------------------------------------------------------------------------------------
-
-
-    Public Class matching_c
-
-        Private mClient As New CLIENT
-        Private mCompte As New Compte
-        Private mMission As New Mission
-
-        Private mProfil As New Profil
-        Private mPoste As New Poste
-        Private mAgence As New Agence
-
-
-
-        Public Sub New()
-
-        End Sub
-
-        Public Function GetXML(ByVal lMapping As entite.MappingMaching) As String
-
-            'compte
-            Me.Ajouter_Compte_MatriculeClient(lMapping.compte.matricule_client)
-            Me.Ajouter_Compte_Nom(lMapping.compte.nom)
-            Me.Ajouter_Compte_Sigle(lMapping.compte.sigle)
-
-            ' Mission 
-            Me.Ajouter_Mission_Metier(Me.GetCritereReferentiel(lMapping.mission.metier.referentiel.code, lMapping.mission.metier.referentiel.libelle, lMapping.mission.metier.priorite))
-            Me.Ajouter_mission_Qualification(Me.GetCritereReferentiel(lMapping.mission.qualification.referentiel.code, lMapping.mission.qualification.referentiel.libelle, lMapping.mission.qualification.priorite))
-            Me.Ajouter_Misssion_AdresseDelegation(lMapping.mission.adresse_delegation.ligne1, lMapping.mission.adresse_delegation.ligne2,
-                                                  lMapping.mission.adresse_delegation.ligne3,
-                                                  lMapping.mission.adresse_delegation.ligne4,
-                                                  lMapping.mission.adresse_delegation.cp_commune.code,
-                                                  lMapping.mission.adresse_delegation.cp_commune.libelle)
-            Me.Ajouter_Mission_Mobilite(lMapping.mission.mobilite)
-            Me.Ajouter_Mission_TypeContrat(Me.GetCritereReferentiel(lMapping.mission.type_contrat.referentiel.code,
-                                                                    lMapping.mission.type_contrat.referentiel.libelle,
-                                                                    lMapping.mission.type_contrat.priorite))
-            Me.Ajouter_Mission_DateDebut(Me.GetCritereDate(lMapping.mission.date_debut.date_critere,
-                                                           lMapping.mission.date_debut.priorite))
-            Me.Ajouter_Mission_DateFin(Me.GetCritereDate(lMapping.mission.date_fin.date_critere, lMapping.mission.date_fin.priorite))
-            Me.Ajouter_Mission_Salaire(lMapping.mission.salaire)
-            Me.Ajouter_Mission_Taches_Realiser(lMapping.mission.taches_realiser)
-            Me.Ajouter_Mission_Mots_Cles(lMapping.mission.mots_cles)
-
-            ' Profil
-            Me.Ajouter_Profil_Descriptif_Profil(lMapping.profil.descriptif)
-
-
-            Dim lExperience As New Experience
-            lExperience.nombre_experience = Me.GetCritereFloat(lMapping.profil.experience.nombre_experience.nombre,
-                                                               lMapping.profil.experience.nombre_experience.priorite)
-            lExperience.experience_client = Me.GetCritereReferentiel(lMapping.profil.experience.experience_client.referentiel.code,
-                                                                     lMapping.profil.experience.experience_client.referentiel.libelle,
-                                                                     lMapping.profil.experience.experience_client.priorite)
-            lExperience.experience_service = Me.GetCritereReferentiel(lMapping.profil.experience.experience_service.referentiel.code,
-                                                                      lMapping.profil.experience.experience_service.referentiel.libelle,
-                                                                      lMapping.profil.experience.experience_service.priorite)
-            lExperience.experience_secteur = Me.GetCritereReferentiel(lMapping.profil.experience.experience_secteur.referentiel.code,
-                                                                      lMapping.profil.experience.experience_secteur.referentiel.libelle,
-                                                                      lMapping.profil.experience.experience_secteur.priorite)
-            lExperience.experience_regroupement = Me.GetCritereReferentiel(lMapping.profil.experience.experience_regroupement.referentiel.code,
-                                                                           lMapping.profil.experience.experience_regroupement.referentiel.libelle,
-                                                                           lMapping.profil.experience.experience_regroupement.priorite)
-            Me.Ajouter_Profil_Experience(lExperience)
-
-
-            Dim lFormation As New Formation
-            lFormation.niveau_etude = Me.GetCritereReferentiel(lMapping.profil.formation.niveau_etude.referentiel.code,
-                                                               lMapping.profil.formation.niveau_etude.referentiel.libelle,
-                                                               lMapping.profil.formation.niveau_etude.priorite)
-            Dim lDiplome As New Diplome
-            lDiplome.type_diplome = Me.GetCritereReferentiel(lMapping.profil.formation.diplome.type_diplome.referentiel.code,
-                                                             lMapping.profil.formation.diplome.type_diplome.referentiel.libelle,
-                                                             lMapping.profil.formation.diplome.type_diplome.priorite)
-            lDiplome.obtenu = Me.GetCritereFlag(lMapping.profil.formation.diplome.obtenu.flag,
-                                                lMapping.profil.formation.diplome.obtenu.priorite)
-            lFormation.diplomes = lDiplome
-
-            Dim lHabilitation As New Habilitation
-            lHabilitation.type_habilitation = Me.GetCritereReferentiel(lMapping.profil.formation.habilitation.type_habilitation.referentiel.code,
-                                                                       lMapping.profil.formation.habilitation.type_habilitation.referentiel.libelle,
-                                                                       lMapping.profil.formation.habilitation.type_habilitation.priorite)
-            lHabilitation.date_de_validite = Me.GetCritereDate(lMapping.profil.formation.habilitation.date_validite.date_critere,
-                                                                   lMapping.profil.formation.habilitation.date_validite.priorite)
-            lFormation.habilitations = lHabilitation
-
-            Me.Ajouter_Profile_Formation(lFormation)
-
-
-            Dim lCompetence As New Competence
-
-            Dim lActiviteLength = lMapping.profil.competence.Activites.Length
-            Dim Activites() As CritereReferentiel = New CritereReferentiel(lActiviteLength) {}
-            For lIndex As Integer = 0 To lActiviteLength - 1
-                Activites(lIndex) = Me.GetCritereReferentiel(lMapping.profil.competence.Activites(lIndex).referentiel.code,
-                                                        lMapping.profil.competence.Activites(lIndex).referentiel.libelle,
-                                                        lMapping.profil.competence.Activites(lIndex).priorite)
-            Next
-            lCompetence.activites = Activites
-
-            Dim lMachineLength = lMapping.profil.competence.Machines.Length
-            Dim Machine() As CritereReferentiel = New CritereReferentiel(lMachineLength) {}
-            For lIndex As Integer = 0 To lMachineLength - 1
-                Machine(lIndex) = Me.GetCritereReferentiel(lMapping.profil.competence.Machines(lIndex).referentiel.code,
-                                                           lMapping.profil.competence.Machines(lIndex).referentiel.libelle,
-                                                           lMapping.profil.competence.Machines(lIndex).priorite)
-            Next
-            lCompetence.machiens_et_materiels = Machine
-
-            Dim lDomaineLength = lMapping.profil.competence.Machines.Length
-            Dim Domaine() As CritereReferentiel = New CritereReferentiel(lDomaineLength) {}
-            For lIndex As Integer = 0 To lDomaineLength - 1
-                Domaine(lIndex) = Me.GetCritereReferentiel(lMapping.profil.competence.Domaines(lIndex).referentiel.code,
-                                                           lMapping.profil.competence.Domaines(lIndex).referentiel.libelle,
-                                                           lMapping.profil.competence.Domaines(lIndex).priorite)
-            Next
-            lCompetence.domaines_de_mise_en_oeuvre = Domaine
-
-            Dim lTechniqueLength = lMapping.profil.competence.Techniques.Length
-            Dim Technique() As CritereReferentiel = New CritereReferentiel(lTechniqueLength) {}
-            For lIndex As Integer = 0 To lTechniqueLength - 1
-                Technique(lIndex) = Me.GetCritereReferentiel(lMapping.profil.competence.Techniques(lIndex).referentiel.libelle,
-                                                             lMapping.profil.competence.Techniques(lIndex).referentiel.code,
-                                                             lMapping.profil.competence.Techniques(lIndex).priorite)
-            Next
-            lCompetence.techniques_et_procedes = Technique
-
-
-            Me.Ajouter_Profil_Conpetences(lCompetence)
-
-            ' Poste
-            Me.Ajouter_Poste_Descriptif(lMapping.poste.descriptif_poste)
-            Me.Ajouter_Poste_Visite_Medical(Me.GetCritereDate(lMapping.poste.visite_medicale.date_critere,
-                                                                lMapping.poste.visite_medicale.priorite))
-
-            'Agence
-            Me.Ajouter_Agence_Statut_Cdi_tt(lMapping.agence.statut_cdi.flag, lMapping.agence.statut_cdi.priorite)
-            Me.Ajouter_Agence_TT_400h(lMapping.agence.tt_400h.flag, lMapping.agence.tt_400h.priorite)
-            Me.Ajouter_Agence_FSPI(lMapping.agence.fspi)
-
-            Me.ConsoliderData()
-            'MthConvertXml.ConvertirObjetEnXMLDocument(lClient)
-
-            Return MthConvertXml.ConvertirObjetEnXMLDocument(mClient).OuterXml
-        End Function
-
-
-
-
-
-        Private Sub Ajouter_Compte_MatriculeClient(ByVal pMatriculeClient As String)
-            Me.mCompte.matriculeCli = pMatriculeClient
-        End Sub
-
-        Private Sub Ajouter_Compte_Nom(ByVal pNom As String)
-            Me.mCompte.nom = pNom
-        End Sub
-
-        Private Sub Ajouter_Compte_Sigle(ByVal pSigle As String)
-            Me.mCompte.sigle = pSigle
-        End Sub
-
-        Private Sub ConsoliderData()
-            mClient.Agence = mAgence
-            mClient.Compte = mCompte
-            mClient.Profil = mProfil
-            mClient.Mission = mMission
-            mClient.Poste = mPoste
-        End Sub
-
-
-
-        ' ----------------------------------- Function Mission Begin ---------------------------------------
-
-
-        Private Sub Ajouter_Mission_Metier(ByVal pCritereReferentiel As CritereReferentiel)
-            mMission.metier = pCritereReferentiel
-        End Sub
-
-        Private Sub Ajouter_mission_Qualification(ByVal pCritereReferentiel As CritereReferentiel)
-            mMission.metier = pCritereReferentiel
-        End Sub
-
-        Private Sub Ajouter_Misssion_AdresseDelegation(ByVal pLigne1 As String, ByVal pLigne2 As String, ByVal pLigne3 As String, ByVal pLigne4 As String, ByVal pCode As String, ByVal pLibelle As String)
-            Dim lAds As New Adresse
-            Dim lCpCommune As New classes_xml_generees.LibRechProfil.Referentiel()
-            lCpCommune.code = pCode
-            lCpCommune.libelle = pLibelle
-
-
-            lAds.cp_commune = lCpCommune
-
-            lAds.ligne1 = pLigne1
-            lAds.ligne2 = pLigne2
-            lAds.ligne3 = pLigne3
-            lAds.ligne4 = pLigne4
-
-            mMission.adresse_delegation = lAds
-
-        End Sub
-
-        Private Sub Ajouter_Mission_Mobilite(ByVal pMobilite As String)
-            mMission.mobilite = pMobilite
-        End Sub
-
-        Private Sub Ajouter_Mission_TypeContrat(ByVal pCritereReferentiel As CritereReferentiel)
-            mMission.type_contrat = pCritereReferentiel
-        End Sub
-
-        Private Sub Ajouter_Mission_DateDebut(ByVal pDateDebut As CritereDate)
-            mMission.date_debut = pDateDebut
-        End Sub
-
-        Private Sub Ajouter_Mission_DateFin(ByVal pDateDebut As CritereDate)
-            mMission.date_fin = pDateDebut
-        End Sub
-
-        Private Sub Ajouter_Mission_Salaire(ByVal pSalaire As String)
-            mMission.salaire = pSalaire
-        End Sub
-
-        Private Sub Ajouter_Mission_Taches_Realiser(ByVal pTaches As String)
-            mMission.taches_a_realiser = pTaches
-        End Sub
-
-        Private Sub Ajouter_Mission_Mots_Cles(ByVal pMotCles As String)
-            mMission.mots_cles = pMotCles
-        End Sub
-
-        ' ----------------------------------- Function  Mission End ---------------------------------------
-
-
-        ' ------------------------------ Function Profil Begin -------------------------------------------------------
-
-
-        Private Sub Ajouter_Profil_Descriptif_Profil(ByVal pDescriptif As String)
-            mProfil.descriptif_profil = pDescriptif
-        End Sub
-
-
-        Private Sub Ajouter_Profil_Experience(ByVal pExperience As Experience)
-            mProfil.experience = pExperience
-        End Sub
-
-        Private Sub Ajouter_Profile_Formation(ByVal pFormation As Formation)
-            mProfil.formation = pFormation
-        End Sub
-
-        Private Sub Ajouter_Profil_Conpetences(ByVal pCompetence As Competence)
-            mProfil.competences = pCompetence
-        End Sub
-
-
-        ' ------------------------------ Function Profil Begin -------------------------------------
-
-
-
-        ' ------------------------------ Function Poste Begin --------------------------------------
-
-        Private Sub Ajouter_Poste_Descriptif(ByVal pDescriptif As String)
-            mPoste.descriptif_poste = pDescriptif
-        End Sub
-
-        Private Sub Ajouter_Poste_Visite_Medical(ByVal pDate As CritereDate)
-            mPoste.visite_medicale_a_jour = pDate
-        End Sub
-
-        ' ------------------------------ Function Poste Begin --------------------------------------
-
-
-
-        Private Sub Ajouter_Agence_Statut_Cdi_tt(ByVal pFlag As Boolean, ByVal pPriorite As Integer)
-            mAgence.statut_cdi_tt = GetCritereFlag(pFlag, pPriorite)
-        End Sub
-
-        Private Sub Ajouter_Agence_TT_400h(ByVal pFlag As Boolean, ByVal pPriorite As Integer)
-            mAgence.tt_400h = GetCritereFlag(pFlag, pPriorite)
-        End Sub
-
-        Private Sub Ajouter_Agence_FSPI(ByVal pFspi As String)
-            mAgence.fspi = pFspi
-        End Sub
-
-
-        Private Function GetCritereReferentiel(ByVal pCode As String, ByVal pLibelle As String, ByVal pPriorite As Integer) As CritereReferentiel
-            Dim lRef As New CritereReferentiel()
-            lRef.referentiel = New classes_xml_generees.LibRechProfil.Referentiel()
-            lRef.priorite = pPriorite
-            lRef.prioriteSpecified = True
-            lRef.referentiel.code = pCode
-            lRef.referentiel.libelle = pLibelle
-            Return lRef
-        End Function
-
-        Private Function GetCritereFloat(ByVal pNombre As Single, ByVal pPriorite As Integer) As CritereFloat
-            Dim lCritereFloat As New CritereFloat()
-            lCritereFloat.nombre = pNombre
-            lCritereFloat.nombreSpecified = True
-            lCritereFloat.priorite = pPriorite
-            lCritereFloat.prioriteSpecified = True
-            Return lCritereFloat
-        End Function
-
-        Private Function GetCritereDate(ByVal pDate As Date, ByVal pPriorite As Integer) As CritereDate
-            Dim lCritereDate As New CritereDate()
-            lCritereDate.date = pDate
-            lCritereDate.dateSpecified = True
-            lCritereDate.priorite = pPriorite
-            lCritereDate.prioriteSpecified = True
-            Return lCritereDate
-        End Function
-
-        Private Function GetCritereFlag(ByVal pflag As Boolean, ByVal pPriorite As Integer) As CritereFlag
-            Dim lCritereFlag As New CritereFlag()
-            lCritereFlag.flag = pflag
-            lCritereFlag.flagSpecified = True
-            lCritereFlag.priorite = pPriorite
-            lCritereFlag.prioriteSpecified = True
-            Return lCritereFlag
-        End Function
-    End Class
 
 End Namespace
