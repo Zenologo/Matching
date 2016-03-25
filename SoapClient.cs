@@ -12,10 +12,7 @@ namespace colissimo
     {
         static void Main(string[] args)
         {
-
-
-
-
+            CallWebService();
         }
 
 
@@ -59,8 +56,11 @@ namespace colissimo
 
         private static XmlDocument CreateSoapEnvelope()
         {
+            string myFile = System.IO.File.ReadAllText("soap.xml");
+
             XmlDocument soapEnvelop = new XmlDocument();
-            soapEnvelop.LoadXml(@"<SOAP-ENV:Envelope xmlns:SOAP-ENV=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsi=""http://www.w3.org/1999/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/1999/XMLSchema""><SOAP-ENV:Body><HelloWorld xmlns=""http://tempuri.org/"" SOAP-ENV:encodingStyle=""http://schemas.xmlsoap.org/soap/encoding/""><int1 xsi:type=""xsd:integer"">12</int1><int2 xsi:type=""xsd:integer"">32</int2></HelloWorld></SOAP-ENV:Body></SOAP-ENV:Envelope>");
+            //soapEnvelop.LoadXml(@"<SOAP-ENV:Envelope xmlns:SOAP-ENV=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsi=""http://www.w3.org/1999/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/1999/XMLSchema""><SOAP-ENV:Body><HelloWorld xmlns=""http://tempuri.org/"" SOAP-ENV:encodingStyle=""http://schemas.xmlsoap.org/soap/encoding/""><int1 xsi:type=""xsd:integer"">12</int1><int2 xsi:type=""xsd:integer"">32</int2></HelloWorld></SOAP-ENV:Body></SOAP-ENV:Envelope>");
+            soapEnvelop.LoadXml(myFile);
             return soapEnvelop;
         }
 
@@ -71,18 +71,6 @@ namespace colissimo
                 soapEnvelopeXml.Save(stream);
             }
         }
-
-        private static string getXml()
-        {
-
-
-            return "";
-        }
-
-
-
-
-
     }
 }
 
