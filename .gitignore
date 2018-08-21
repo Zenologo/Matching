@@ -51,9 +51,9 @@ Thumbs.db
 .spyderproject
 .spyproject
 .ropeproject
-*.cfg
 
-# Directory $ file #
+
+# Directory & file #
 #######################
 doc/
 *.html

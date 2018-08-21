@@ -4,8 +4,8 @@
 import scrapy
 import os
 import csv
-from .geckologger import GeckoLogger
-from ..items import BrandItem, ProductItem
+from geckologger import GeckoLogger
+from ..items import ProductItem
 
 #scrapy.Spider
 class ProductSpider(scrapy.Spider):
