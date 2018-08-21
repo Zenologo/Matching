@@ -80,20 +80,10 @@ class ProductSpider(scrapy.Spider):
                 self.logger.debug(product_item['product_url'].strip())
                 yield product_item
 
+            next_page = response.xpath('//li[contains(@class, "next")]/a')
+            if next_page == None:
+                scrapy.Request(url=next_page, callback=self.parse_brand)
 
-            #brands = response.xpath('//a[contains(@class, "link--normal")]')
-
-            """
-            for brand in brands:
-                brand_link = brand.xpath('.//@href').extract_first()
-                brand_name = brand.xpath('.//text()').extract_first()
-                brand_item['brand_link'] = response.urljoin(brand_link)
-                brand_item['brand'] = brand_name
-                #self.logger.debug(brand_link)
-                #self.logger.debug(response.urljoin(brand_link))
-                #self.logger.debug(brand_name)
-                yield brand_item
-            """
         else:
             filename = 'catalog-%s.html' % page
             with open(filename, 'wb') as f:
