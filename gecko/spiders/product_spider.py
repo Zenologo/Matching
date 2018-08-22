@@ -15,7 +15,8 @@ class ProductSpider(scrapy.Spider):
     def start_requests(self):
         urls = self.read_brands()
         for url in urls:
-            yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
+            #yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
+            yield scrapy.Request(url = 'https://www.1001pharmacies.com/100bon-m4244', callback=self.parse_brand)
 
     def set_url(self, url):
         pass
@@ -80,13 +81,15 @@ class ProductSpider(scrapy.Spider):
                 self.logger.debug(product_item['product_url'].strip())
                 yield product_item
 
-            next_page = response.xpath('//li[contains(@class, "next")]/a')
-            if next_page == None:
-                scrapy.Request(url=next_page, callback=self.parse_brand)
-
+            next_page = response.xpath('//li[contains(@class, "next")]/a/@href').extract_first()
+            if next_page != None:
+                next_page = response.url + "/" + next_page.split("/")[-1]
+                yield scrapy.Request(url=next_page, callback=self.parse_brand)
         else:
             filename = 'catalog-%s.html' % page
             with open(filename, 'wb') as f:
                 f.write(response.body)
 
-
+    # Todo: Parse products details
+    def parse_product(self, response):
+        pass
