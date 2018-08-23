@@ -11,11 +11,16 @@ from ..items import ProductItem
 class ProductSpider(scrapy.Spider):
     name = "product"
     logger = GeckoLogger("product", "log_product.log")
+    url_string = ""
 
     def start_requests(self):
         urls = self.read_brands()
         for url in urls:
             #yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
+            pos = url['brand_link'].find("/", 11)
+            if (pos != -1):
+                self.url_string = url['brand_link'][:pos]
+
             yield scrapy.Request(url = 'https://www.1001pharmacies.com/100bon-m4244', callback=self.parse_brand)
 
     def set_url(self, url):
@@ -55,7 +60,7 @@ class ProductSpider(scrapy.Spider):
 
     def parse_brand(self, response):
         """ Parse brand page """
-        product_item = ProductItem()
+        #product_item = ProductItem()
         page = response.url.split("/")[-2]
         #self.logger.debug('page name: %s' % response.url)
         #self.logger.debug('Response status: %s' % response.status)
@@ -70,21 +75,22 @@ class ProductSpider(scrapy.Spider):
             products = response.xpath('//h3[contains(@class, "title order-2")]/a')
 
             for product in products:
-                tmp_value = product.xpath(".//text()").extract_first()
-                product_item['product_name'] = tmp_value.strip()
+                #tmp_value = product.xpath(".//text()").extract_first()
+                #product_item['product_name'] = tmp_value.strip()
 
-                tmp_value = product.xpath(".//@href").extract_first()
-                product_item['product_url'] = tmp_value.strip()
+                product_url = self.url_string + product.xpath(".//@href").extract_first()
+                #product_item['product_url'] = self.url_string + tmp_value.strip()
 
-
-                self.logger.debug(product_item['product_name'].strip())
-                self.logger.debug(product_item['product_url'].strip())
-                yield product_item
+                scrapy.Request(url = product_url, callback=self.parse_product)
+                #self.logger.debug(product_item['product_name'].strip())
+                #self.logger.debug(product_item['product_url'].strip())
+                #yield product_item
 
             next_page = response.xpath('//li[contains(@class, "next")]/a/@href').extract_first()
             if next_page != None:
                 next_page = response.url + "/" + next_page.split("/")[-1]
                 yield scrapy.Request(url=next_page, callback=self.parse_brand)
+
         else:
             filename = 'catalog-%s.html' % page
             with open(filename, 'wb') as f:
@@ -92,4 +98,6 @@ class ProductSpider(scrapy.Spider):
 
     # Todo: Parse products details
     def parse_product(self, response):
+        # Todo Extract product's info
+        product_item = ProductItem()
         pass
