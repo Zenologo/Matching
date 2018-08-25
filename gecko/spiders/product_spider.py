@@ -81,7 +81,7 @@ class ProductSpider(scrapy.Spider):
                 product_url = self.url_string + product.xpath(".//@href").extract_first()
                 #product_item['product_url'] = self.url_string + tmp_value.strip()
 
-                scrapy.Request(url = product_url, callback=self.parse_product)
+                yield scrapy.Request(url = product_url, callback=self.parse_product)
                 #self.logger.debug(product_item['product_name'].strip())
                 #self.logger.debug(product_item['product_url'].strip())
                 #yield product_item
@@ -96,8 +96,32 @@ class ProductSpider(scrapy.Spider):
             with open(filename, 'wb') as f:
                 f.write(response.body)
 
-    # Todo: Parse products details
+
     def parse_product(self, response):
-        # Todo Extract product's info
         product_item = ProductItem()
-        pass
+        if response.status == 200:
+
+            value = response.xpath('//h2[contains(@itemprop, "brand")]/a/span/text()').extract_first()
+            product_item['brand_name'] = value.strip()
+
+            value = response.xpath('//h1[@class="order-1" and @itemprop="name"]/text()').extract_first()
+            product_item['product_name'] = value.strip()
+
+            product_item['product_url']= response.url
+
+            value = response.xpath('//div[@itemprop="description"]/p/text()').extract_first()
+            product_item['short_description'] = value.strip()
+
+            value = response.xpath('//div[@itemprop="weight"]/span/text()').extract_first()
+            product_item['weight'] = value.strip()
+
+            value = response.xpath('//div[@id="longDescription"]/text()').extract_first()
+            product_item['long_description'] = value.strip()
+
+            value = response.xpath('//div[@id="usage"]/p/text()').extract_first()
+            product_item['usage'] = value.strip()
+
+            value = response.xpath('//div[@id="composition"]/text()').extract_first()
+            product_item['composition'] = value.strip()
+            yield product_item
+

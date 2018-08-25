@@ -26,6 +26,7 @@ class BrandItem(scrapy.Item):
     product_url = scrapy.Field()
 
 class ProductItem(scrapy.Item):
+    brand_name = scrapy.Field()
     product_name = scrapy.Field()
     product_url = scrapy.Field()
     short_description = scrapy.Field()
