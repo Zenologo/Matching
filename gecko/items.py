@@ -11,13 +11,6 @@ class GeckoItem(scrapy.Item):
     # All field of product
     brand = scrapy.Field()
     brand_link = scrapy.Field()
-    #name_product = scrapy.Field()
-    #info = scrapy.Field()
-    #price = scrapy.Field()
-    #weight = scrapy.Field()
-    #description = scrapy.Field()
-    #utilization = scrapy.Field()
-    #ingredients = scrapy.Field()
 
 
 class BrandItem(scrapy.Item):
@@ -25,12 +18,14 @@ class BrandItem(scrapy.Item):
     description = scrapy.Field()
     product_url = scrapy.Field()
 
+
 class ProductItem(scrapy.Item):
     brand_name = scrapy.Field()
-    product_name = scrapy.Field()
-    product_url = scrapy.Field()
-    short_description = scrapy.Field()
+    name = scrapy.Field()
+    url = scrapy.Field()
     weight = scrapy.Field()
+    price = scrapy.Field()
+    short_description = scrapy.Field()
     long_description = scrapy.Field()
     usage = scrapy.Field()
     composition = scrapy.Field()
