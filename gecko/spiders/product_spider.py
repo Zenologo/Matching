@@ -5,7 +5,7 @@ import scrapy
 import os
 import csv
 from w3lib.html import remove_tags
-from geckologger import GeckoLogger
+from .geckologger import GeckoLogger
 from ..items import ProductItem
 
 #scrapy.Spider
@@ -23,11 +23,16 @@ class ProductSpider(scrapy.Spider):
             pos = url['brand_link'].find("/", 11)
             if (pos != -1):
                 self.url_string = url['brand_link'][:pos]
-            if n_url != 40000000000:
+            if n_url == 1:
                 yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
             n_url += 1
 
     def set_url(self, url):
+        pass
+
+    # TODO: Verify file 'doc/brands/brands_xxxxxx.csv' exists in the second level doc.
+    def verify_path(self):
+        """  """
         pass
 
     def read_brands(self):

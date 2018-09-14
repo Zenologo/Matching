@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+#
+#
+#
+
+
 import logging
 from logging.handlers import RotatingFileHandler
 from scrapy.utils.log import configure_logging

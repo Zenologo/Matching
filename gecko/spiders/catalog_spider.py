@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
-# jsut for https://www.1001pharmacies.com/marques
+#
+# This file includes all classes and functions for capture
+# brand's info from site 1001pharmacies.com
+#
+# Thanks for the page "/marques" who list all brand's link.
+#
+
 
 import scrapy
 from .geckologger import GeckoLogger
@@ -11,11 +17,13 @@ class CatalogSpider(scrapy.Spider):
     logger = GeckoLogger("catalog", "log_catalog.log")
 
     def start_requests(self):
+        """ Init task site and download site """
         urls=['https://www.1001pharmacies.com/marques']
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
+        """ Parse page if sucess, if not save page's source in local """
         brand_item = GeckoItem()
         page = response.url.split("/")[-2]
         self.logger.debug('page name: %s' % response.url)
@@ -36,7 +44,6 @@ class CatalogSpider(scrapy.Spider):
                 #self.logger.debug(response.urljoin(brand_link))
                 #self.logger.debug(brand_name)
                 yield brand_item
-
         else:
             filename = 'catalog-%s.html' % page
             with open(filename, 'wb') as f:
