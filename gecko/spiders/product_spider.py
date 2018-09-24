@@ -30,10 +30,19 @@ class ProductSpider(scrapy.Spider):
     def set_url(self, url):
         pass
 
-    # TODO: Verify file 'doc/brands/brands_xxxxxx.csv' exists in the second level doc.
+    # TODO: Verify file 'doc/XXX/brands/brands_xxxxxx.csv' exists in the second level doc.
+    # 1. 抓取产品目录文件完后，确保落地文件要保存在doc/XXXX/brands/路径下。
+    # 2. 产品文件名格式为：XXX_20180830.csv
+    # 3. 采集产品的时候，先从产品目录中读取品牌文件列表，然后逐一读取品牌文件。
+    # 4. 采集完产品后，保存路径为：doc/product/XXXX_20180830.csv
     def verify_path(self):
-        """  """
-        pass
+        """ Verify folder 'doc' if exists. if not create it.  """
+
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        #self.logger.debug('current directory: %s' %  dir_path)
+        path_directory = dir_path + "/../../doc"
+        if not os.path.exists(path_directory) :
+            os.makedirs(path_directory)
 
     def read_brands(self):
         """ Read brand file and  """
