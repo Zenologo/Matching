@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# jsut for 1001pharmacies.com's products
+#  For 1001pharmacies.com's products
 
 import scrapy
 import os
@@ -13,6 +13,7 @@ class ProductSpider(scrapy.Spider):
     name = "product"
     logger = GeckoLogger("product", "log_product.log")
     url_string = ""
+    dir_path = ""
 
     def start_requests(self):
         urls = self.read_brands()
@@ -35,20 +36,20 @@ class ProductSpider(scrapy.Spider):
     # 2. 产品文件名格式为：XXX_20180830.csv
     # 3. 采集产品的时候，先从产品目录中读取品牌文件列表，然后逐一读取品牌文件。
     # 4. 采集完产品后，保存路径为：doc/product/XXXX_20180830.csv
-    def verify_path(self):
+    def verify_path_doc(self):
         """ Verify folder 'doc' if exists. if not create it.  """
-
-        dir_path = os.path.dirname(os.path.realpath(__file__))
+        self.dir_path = os.path.dirname(os.path.realpath(__file__))
         #self.logger.debug('current directory: %s' %  dir_path)
-        path_directory = dir_path + "/../../doc"
+        path_directory = self.dir_path + "/../../doc"
         if not os.path.exists(path_directory) :
             os.makedirs(path_directory)
 
     def read_brands(self):
         """ Read brand file and  """
-        dir_path = os.path.dirname(os.path.realpath(__file__))
+        self.verify_path_doc();
+        #self.dir_path = os.path.dirname(os.path.realpath(__file__))
         #self.logger.debug('current directory: %s' %  dir_path)
-        path_directory = dir_path + "/../../doc/1001pharmacies/"
+        path_directory = self.dir_path + "/../../doc/1001pharmacies/"
         #self.logger.debug(path_directory)
         dirs = os.listdir(path_directory)
 

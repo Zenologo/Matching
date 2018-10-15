@@ -8,8 +8,10 @@
 
 
 import scrapy
+import os
 from .geckologger import GeckoLogger
 from ..items import GeckoItem
+from datetime import datetime
 
 #scrapy.Spider
 class CatalogSpider(scrapy.Spider):
@@ -20,7 +22,28 @@ class CatalogSpider(scrapy.Spider):
         """ Init task site and download site """
         urls=['https://www.1001pharmacies.com/marques']
         for url in urls:
+            self.verify_path(url)
             yield scrapy.Request(url=url, callback=self.parse)
+
+    def verify_path(self, url):
+        """ Verify site's directory,  if exists. if not create it.
+            Doc
+                [Site name]
+                    [catagory]
+                    [product]
+        """
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        #self.logger.debug('current directory: %s' %  dir_path)
+        dir_path = dir_path + "/../../doc"
+        if not os.path.exists(dir_path) :
+            os.makedirs(dir_path)
+        site = url.split('//')[-1].split('/')[0]
+        if site[0:4] == "www.":
+            site = site[4:]
+        dir_path += '/' + site + "/brands"
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path + '')
+
 
     def parse(self, response):
         """ Parse page if sucess, if not save page's source in local """
