@@ -32,17 +32,17 @@ class CatalogSpider(scrapy.Spider):
                     [catagory]
                     [product]
         """
-        dir_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = os.path.dirname(os.path.realpath(__file__))
         #self.logger.debug('current directory: %s' %  dir_path)
-        dir_path = dir_path + "/../../doc"
-        if not os.path.exists(dir_path) :
-            os.makedirs(dir_path)
+        test_path = test_path + "/../../doc"
+        if not os.path.exists(test_path) :
+            os.makedirs(test_path)
         site = url.split('//')[-1].split('/')[0]
         if site[0:4] == "www.":
             site = site[4:]
-        dir_path += '/' + site + "/brands"
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path + '')
+        #dir_path += '/' + site + "/brands"
+        if not os.path.exists(test_path):
+            os.makedirs(test_path + '')
 
 
     def parse(self, response):
