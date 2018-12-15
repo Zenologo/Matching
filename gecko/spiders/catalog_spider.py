@@ -18,8 +18,8 @@ class CatalogSpider(scrapy.Spider):
     name = "catalog"
     logger = GeckoLogger("catalog", "log_catalog.log")
 
-    def start_requests(self):
-        """ Init task site and download site """
+    def start_requests(self):        
+        # Init task site and download site 
         urls=['https://www.1001pharmacies.com/marques']
         for url in urls:
             self.verify_path(url)
@@ -49,13 +49,13 @@ class CatalogSpider(scrapy.Spider):
         """ Parse page if sucess, if not save page's source in local """
         brand_item = GeckoItem()
         page = response.url.split("/")[-2]
-        self.logger.debug('page name: %s' % response.url)
-        self.logger.debug('Response status: %s' % response.status)
+        #self.logger.debug('page name: %s' % response.url)
+        #self.logger.debug('Response status: %s' % response.status)
 
         # parse the page
         if response.status == 200:
             #self.logger.debug('analyser web begin')
-            self.logger.debug(response.urljoin('/catalog'))
+            #self.logger.debug(response.urljoin('/catalog'))
             
             brands = response.xpath('//a[contains(@class, "link--normal")]')
             for brand in brands:
