@@ -17,13 +17,18 @@ from datetime import datetime
 class CatalogSpider(scrapy.Spider):
     name = "catalog"
     logger = GeckoLogger("catalog", "log_catalog.log")
+    site = ''
+    usrls=[]
+
+    def __init__(self):
+        self.site = 'kjlkj'
+        self.urls=['https://www.1001pharmacies.com/marques']
 
     def start_requests(self):        
-        # Init task site and download site 
-        urls=['https://www.1001pharmacies.com/marques']
-        for url in urls:
+        # Init task site and download site
+        for url in self.urls:
             self.verify_path(url)
-            yield scrapy.Request(url=url, callback=self.parse)
+            yield scrapy.Request(url = url, callback = self.parse)
 
     def verify_path(self, url):
         """ Verify site's directory,  if exists. if not create it.
@@ -51,9 +56,9 @@ class CatalogSpider(scrapy.Spider):
         page = response.url.split("/")[-2]
         #self.logger.debug('page name: %s' % response.url)
         #self.logger.debug('Response status: %s' % response.status)
-
+        
         # parse the page
-        if response.status == 200:
+        if response.status == 300:
             #self.logger.debug('analyser web begin')
             #self.logger.debug(response.urljoin('/catalog'))
             

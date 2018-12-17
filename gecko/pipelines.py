@@ -22,10 +22,14 @@ class CsvPipeline(object):
         self.files = {}
 
     def open_spider(self, spider):
-        ''' Test get path '''
+        file_path = os.getcwd() + '/../doc/' + date.today().strftime('%Y-%m-%d') + '/'  
 
-        file_path = os.getcwd() + '/../doc/site'  
-        self.file = open("%s%s_%s.csv" % (file_path, spider.name, date.today()), 'wb')
+        if not os.path.exists(file_path):
+            os.makedirs(file_path)
+
+
+        print(spider.site)
+        self.file = open("%s%s_%s.csv" % (file_path, spider.name, spider.site), 'wb')
         self.exporter = CsvItemExporter(self.file, True)
         self.exporter.start_exporting()
 
