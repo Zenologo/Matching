@@ -31,7 +31,9 @@ class CatalogSpider(scrapy.Spider):
             yield scrapy.Request(url = url, callback = self.parse)
 
     def verify_path(self, url):
-        """ Verify site's directory,  if exists. if not create it.
+        """ 
+        
+        Verify site's directory,  if exists. if not create it.
             Doc
                 [Site name]
                     [catagory]
@@ -39,7 +41,8 @@ class CatalogSpider(scrapy.Spider):
         """
         test_path = os.path.dirname(os.path.realpath(__file__))
         #self.logger.debug('current directory: %s' %  dir_path)
-        test_path = test_path + "/../doc"
+        test_path = test_path + "/../../doc"
+        print ('catalog test_path: %s'  % test_path)
         if not os.path.exists(test_path) :
             os.makedirs(test_path)
         site = url.split('//')[-1].split('/')[0]
