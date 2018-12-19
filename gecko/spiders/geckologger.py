@@ -3,7 +3,7 @@
 #
 #
 
-
+import os
 import logging
 from logging.handlers import RotatingFileHandler
 from scrapy.utils.log import configure_logging
@@ -21,7 +21,15 @@ class GeckoLogger:
         
         # 创建一个handler，用于写入日志文件 
         #file_handle = logging.FileHandler(file_name)
-        file_handle = RotatingFileHandler(file_name, maxBytes=10240000, backupCount=5)
+        file_path = os.path.dirname(os.path.realpath(__file__)) + '/../../log/'
+        if not os.path.exists(file_path):
+            os.makedirs(file_path)
+        
+        file_path = file_path + file_name
+        print(file_path)
+
+
+        file_handle = RotatingFileHandler(file_path + file_name, maxBytes=10240000, backupCount=5)
         file_handle.setLevel(logging.DEBUG)
         
         # 再创建一个handler，用于输出到控制台 

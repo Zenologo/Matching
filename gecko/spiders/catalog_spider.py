@@ -39,7 +39,7 @@ class CatalogSpider(scrapy.Spider):
         """
         test_path = os.path.dirname(os.path.realpath(__file__))
         #self.logger.debug('current directory: %s' %  dir_path)
-        test_path = test_path + "/../../doc"
+        test_path = test_path + "/../doc"
         if not os.path.exists(test_path) :
             os.makedirs(test_path)
         site = url.split('//')[-1].split('/')[0]
