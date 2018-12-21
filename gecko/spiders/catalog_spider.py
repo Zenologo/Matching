@@ -20,9 +20,15 @@ class CatalogSpider(scrapy.Spider):
     site = ''
     usrls=[]
 
-    def __init__(self):
+    def __init__(self, **kwarg):
         self.site = 'kjlkj'
-        self.urls=['https://www.1001pharmacies.com/marques']
+        #self.urls=['https://www.1001pharmacies.com/marques']
+        self.urls = [kwarg['argu']]
+
+        print('')
+        print(self.urls)
+        print('')
+
 
     def start_requests(self):        
         # Init task site and download site
