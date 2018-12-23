@@ -3,7 +3,7 @@
 # This file includes all classes and functions for capture
 # brand's info from site 1001pharmacies.com
 #
-# Thanks for the page "/marques" who list all brand's link.
+# Thanks for the page "/marques" who lists all brand's link.
 #
 
 
@@ -17,17 +17,23 @@ from datetime import datetime
 class CatalogSpider(scrapy.Spider):
     name = "catalog"
     logger = GeckoLogger("catalog", "log_catalog.log")
-    site = ''
+
+    # Site's name, using in file's name what it has downloaded. for exemple: catalog_XXXX.csv
+    site = '' 
     usrls=[]
 
     def __init__(self, **kwarg):
-        self.site = 'kjlkj'
         #self.urls=['https://www.1001pharmacies.com/marques']
-        self.urls = [kwarg['argu']]
+        self.urls = [kwarg['arg']]
 
-        print('')
-        print(self.urls)
-        print('')
+        # Get site's name
+        self.site = self.urls[0].split('//')[-1].split('/')[0]
+        if self.site[0:4] == "www.":
+            self.site = self.site[4:]
+
+        pos_point = self.site.find(".")
+        if pos_point > 0:
+            self.site = self.site[0:pos_point]
 
 
     def start_requests(self):        

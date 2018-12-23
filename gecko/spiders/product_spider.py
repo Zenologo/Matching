@@ -7,6 +7,7 @@ import csv
 from w3lib.html import remove_tags
 from .geckologger import GeckoLogger
 from ..items import ProductItem
+from .toolkit import check_doc_folder, get_subfolders
 
 #scrapy.Spider
 class ProductSpider(scrapy.Spider):
@@ -14,39 +15,55 @@ class ProductSpider(scrapy.Spider):
     logger = GeckoLogger("product", "log_product.log")
     url_string = ""
     dir_path = ""
+    file_name = ""
+    site = ""
+
+    def __init__(self, **kwarg):
+        self.site = kwarg['arg']
+        # Get site's name
+        self.file_name = self.site.split('//')[-1].split('/')[0]
+        if self.file_name[0:4] == "www.":
+            self.file_name = self.file_name[4:]
+
+        pos_point = self.file_name.find(".")
+        if pos_point > 0:
+            self.file_name = self.file_name[0:pos_point]
+        self.file_name = "catalog_%s.csv" % (self.file_name)
+        print("file_name: %s" % (self.file_name))
+
+
 
     def start_requests(self):
         urls = self.read_brands()
+        pass
         n_url = 0
-
         for url in urls:
             #yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
             pos = url['brand_link'].find("/", 11)
             if (pos != -1):
                 self.url_string = url['brand_link'][:pos]
             if n_url == 1:
-                yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
-            n_url += 1
+                pass
+                #yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
+            n_url = n_url + 1
+        
 
-    def set_url(self, url):
-        pass
+#    def set_url(self, url):
+#        pass
 
-    # TODO: Verify file 'doc/XXX/brands/brands_xxxxxx.csv' exists in the second level doc.
-    # 1. 抓取产品目录文件完后，确保落地文件要保存在doc/XXXX/brands/路径下。
-    # 2. 产品文件名格式为：XXX_20180830.csv
-    # 3. 采集产品的时候，先从产品目录中读取品牌文件列表，然后逐一读取品牌文件。
-    # 4. 采集完产品后，保存路径为：doc/product/XXXX_20180830.csv
-    def verify_path_doc(self):
-        """ Verify folder 'doc' if exists. if not create it.  """
-        self.dir_path = os.path.dirname(os.path.realpath(__file__))
-        #self.logger.debug('current directory: %s' %  dir_path)
-        path_directory = self.dir_path + "/../../doc"
-        if not os.path.exists(path_directory) :
-            os.makedirs(path_directory)
 
     def read_brands(self):
-        """ Read brand file and  """
-        self.verify_path_doc();
+        """ 
+        Read catalog file and extract all product's url  
+        """
+        doc_folder_path = check_doc_folder()
+        list_file = get_subfolders(doc_folder_path, self.file_name)
+        print('')
+        print (list_file)
+        print("")
+
+        # TODO: 解析文件，读取出每行内容，然后下载
+
         #self.dir_path = os.path.dirname(os.path.realpath(__file__))
         #self.logger.debug('current directory: %s' %  dir_path)
         path_directory = self.dir_path + "/../../doc/1001pharmacies/"
@@ -154,7 +171,7 @@ class ProductSpider(scrapy.Spider):
                 value = remove_tags(value)
                 product_item['composition'] = value.strip()
 
-            value = response.xpath('//p[@class="price"]/meta[@itemprop="price"]/@content').extract_first();
+            value = response.xpath('//p[@class="price"]/meta[@itemprop="price"]/@content').extract_first()
             if value == None:
                 product_item['price'] = "INDISPONIBLE"
             else:
