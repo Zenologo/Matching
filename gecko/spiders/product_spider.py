@@ -32,6 +32,20 @@ class ProductSpider(scrapy.Spider):
         print("file_name: %s" % (self.file_name))
 
 
+    def read_brands(self):
+        """ 
+        Read catalog file and extract all product's url  
+        """
+        doc_folder_path = check_doc_folder()
+        list_file = get_subfolders(doc_folder_path, self.file_name)
+
+        for file in list_file:                
+            self.logger.debug(f"file name: {file}")
+            with open(file, newline='', encoding='utf-8') as brand_file:
+                reader = csv.DictReader(brand_file)
+                for row in reader:
+                    yield row    
+
 
     def start_requests(self):
         urls = self.read_brands()
@@ -46,51 +60,6 @@ class ProductSpider(scrapy.Spider):
                 pass
                 #yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
             n_url = n_url + 1
-        
-
-#    def set_url(self, url):
-#        pass
-
-
-    def read_brands(self):
-        """ 
-        Read catalog file and extract all product's url  
-        """
-        doc_folder_path = check_doc_folder()
-        list_file = get_subfolders(doc_folder_path, self.file_name)
-        print('')
-        print (list_file)
-        print("")
-
-        # TODO: 解析文件，读取出每行内容，然后下载
-
-        #self.dir_path = os.path.dirname(os.path.realpath(__file__))
-        #self.logger.debug('current directory: %s' %  dir_path)
-        path_directory = self.dir_path + "/../../doc/1001pharmacies/"
-        #self.logger.debug(path_directory)
-        dirs = os.listdir(path_directory)
-
-        """ Find last brand file """
-        last_dir = ''
-        for file in dirs:
-            self.logger.debug(file)
-            if file[:6] == "brands" and file > last_dir:
-                last_dir = file
-        #self.logger.debug('last dir %s' % last_dir)
-        path_directory = f'{path_directory}{last_dir}'
-        path_brands_file = f'{path_directory}/brands.csv'
-        #self.logger.debug(path_brands_file)
-        if os.path.isfile(path_brands_file):
-            #self.logger.debug("brands cvs file is exist")
-            limit = 0 # just read first 3 lines
-            with open(path_brands_file, newline='', encoding='utf-8') as brand_file:
-                reader = csv.DictReader(brand_file)
-                for row in reader:
-                    yield row
-
-        else:
-            self.logger.debug("brands cvs file is not exist")
-
 
 
     def parse_brand(self, response):
