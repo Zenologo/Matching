@@ -73,7 +73,7 @@ class CatalogSpider(scrapy.Spider):
         #self.logger.debug('Response status: %s' % response.status)
         
         # parse the page
-        if response.status == 300:
+        if response.status == 200:
             #self.logger.debug('analyser web begin')
             #self.logger.debug(response.urljoin('/catalog'))
             

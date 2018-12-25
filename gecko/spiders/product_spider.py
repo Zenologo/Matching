@@ -28,6 +28,7 @@ class ProductSpider(scrapy.Spider):
         pos_point = self.file_name.find(".")
         if pos_point > 0:
             self.file_name = self.file_name[0:pos_point]
+        self.site = self.file_name
         self.file_name = "catalog_%s.csv" % (self.file_name)
         print("file_name: %s" % (self.file_name))
 
@@ -49,16 +50,17 @@ class ProductSpider(scrapy.Spider):
 
     def start_requests(self):
         urls = self.read_brands()
-        pass
         n_url = 0
         for url in urls:
             #yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
+            print("")
+            print(url)
+            print("")
             pos = url['brand_link'].find("/", 11)
             if (pos != -1):
                 self.url_string = url['brand_link'][:pos]
             if n_url == 1:
-                pass
-                #yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
+                yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
             n_url = n_url + 1
 
 
@@ -74,9 +76,9 @@ class ProductSpider(scrapy.Spider):
             #self.logger.debug('analyser web begin')
             #self.logger.debug(response.urljoin('/catalog'))
             """ parse page """
-            brand_name = response.xpath('//h2[contains(@class, "title-brand--king text--gray-medium")]/text()').extract_first()
+            #brand_name = response.xpath('//h2[contains(@class, "title-brand--king text--gray-medium")]/text()').extract_first()
             #products = response.xpath('//h3[contains(@class, "title order-2")]/a/@href')
-            products = response.xpath('//h3[contains(@class, "title order-2")]/a')
+            products = response.xpath('//h2[contains(@class, "title order-1 mb-0")]/a')
             self.logger.debug("size of links: %s" % len(products) )
 
             for product in products:
