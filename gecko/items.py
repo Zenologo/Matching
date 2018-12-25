@@ -7,12 +7,6 @@
 
 import scrapy
 
-class GeckoItem(scrapy.Item):
-    # All field of product
-    brand = scrapy.Field()
-    brand_link = scrapy.Field()
-
-
 class BrandItem(scrapy.Item):
     brand = scrapy.Field()
     brand_link = scrapy.Field()

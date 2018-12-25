@@ -23,7 +23,6 @@ class CatalogSpider(scrapy.Spider):
     usrls=[]
 
     def __init__(self, **kwarg):
-        #self.urls=['https://www.1001pharmacies.com/marques']
         self.urls = [kwarg['arg']]
 
         # Get site's name
