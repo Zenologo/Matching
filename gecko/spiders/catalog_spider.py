@@ -10,7 +10,7 @@
 import scrapy
 import os
 from .geckologger import GeckoLogger
-from ..items import GeckoItem
+from ..items import BrandItem
 from datetime import datetime
 
 #scrapy.Spider
@@ -67,7 +67,7 @@ class CatalogSpider(scrapy.Spider):
 
     def parse(self, response):
         """ Parse page if sucess, if not save page's source in local """
-        brand_item = GeckoItem()
+        brand_item = BrandItem()
         page = response.url.split("/")[-2]
         #self.logger.debug('page name: %s' % response.url)
         #self.logger.debug('Response status: %s' % response.status)
@@ -75,17 +75,16 @@ class CatalogSpider(scrapy.Spider):
         # parse the page
         if response.status == 200:
             #self.logger.debug('analyser web begin')
-            #self.logger.debug(response.urljoin('/catalog'))
+            self.logger.debug(response.urljoin('/catalog'))
             
             brands = response.xpath('//a[contains(@class, "link--normal")]')
             for brand in brands:
                 brand_link = brand.xpath('.//@href').extract_first()
                 brand_name = brand.xpath('.//text()').extract_first()
+
                 brand_item['brand_link'] = response.urljoin(brand_link)
                 brand_item['brand'] = brand_name
-                #self.logger.debug(brand_link)
-                #self.logger.debug(response.urljoin(brand_link))
-                #self.logger.debug(brand_name)
+                brand_item['created_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 yield brand_item
         else:
             filename = 'catalog-%s.html' % page

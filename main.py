@@ -1,11 +1,13 @@
 import os
+import time
 
 print('begin example')
 
 
 # Read task file then run spider
 
-#os.system('scrapy crawl catalog -a arg=https://www.1001pharmacies.com/marques')
+os.system('scrapy crawl catalog -a arg=https://www.1001pharmacies.com/marques')
+time.sleep(1) # Sleep 1 second
 os.system('scrapy crawl product -a arg=https://www.1001pharmacies.com/marques')
 # Read product task then run spider
 """

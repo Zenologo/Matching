@@ -4,6 +4,7 @@
 import scrapy
 import os
 import csv
+from datetime import datetime
 from w3lib.html import remove_tags
 from .geckologger import GeckoLogger
 from ..items import ProductItem
@@ -147,5 +148,7 @@ class ProductSpider(scrapy.Spider):
                 product_item['price'] = "INDISPONIBLE"
             else:
                 product_item['price'] = value.strip()
+            
+            product_item['created_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             yield product_item
 
