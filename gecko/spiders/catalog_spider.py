@@ -35,11 +35,12 @@ class CatalogSpider(scrapy.Spider):
             self.site = self.site[0:pos_point]
 
 
-    def start_requests(self):        
+    def start_requests(self):
         # Init task site and download site
         for url in self.urls:
             self.verify_path(url)
             yield scrapy.Request(url = url, callback = self.parse)
+
 
     def verify_path(self, url):
         """ 
