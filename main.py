@@ -1,8 +1,7 @@
 import os
 import sched, time, random
 from datetime import date
-
-
+from config import ReadConfig
 
 def path_existed():
     """ If directory is existed that mean """
@@ -51,22 +50,20 @@ print('begin example')
 
 # Read product task then run spider
 
-run_gecko()
-"""
-from scrapy.cmdline import execute
 
-try:
-    execute(
-        [
-            'scrapy',
-            'crawl',
-            'product',
-            '-a arg==https://www.1001pharmacies.com/marques',
-             
-        ]
-    )
-except SystemExit:
-    pass
-"""
+#TODO: 1. run server for wait cmd; 
+#      2. if there is not cmd during 24 hours then run function automatically
+
+#run_gecko()
+
+
+
+conf = ReadConfig()
+print (conf.get_host())
+print (conf.is_cmd("gecko_run_catalog"))
+
+
+# print(items[1])
+
 print('end example')
 

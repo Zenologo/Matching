@@ -25,4 +25,4 @@ if s is None:
 with s:
     s.sendall(b'Hello, world')
     data = s.recv(1024)
-print('Received', repr(data))
+print('Received from server', repr(data))
