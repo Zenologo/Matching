@@ -2,8 +2,8 @@
 import socket
 import sys
 
-HOST = "127.0.0.1"               # Symbolic name meaning all available interfaces
-PORT = 50007              # Arbitrary non-privileged port
+HOST = '127.0.0.1'              # Symbolic name meaning all available interfaces
+PORT = 33000              # Arbitrary non-privileged port
 s = None
 for res in socket.getaddrinfo(HOST, PORT, socket.AF_UNSPEC,
                               socket.SOCK_STREAM, 0, socket.AI_PASSIVE):
@@ -28,6 +28,7 @@ for res in socket.getaddrinfo(HOST, PORT, socket.AF_UNSPEC,
 if s is None:
     print('could not open socket')
     sys.exit(1)
+print("begin accept")
 conn, addr = s.accept()
 with conn:
     print('Connected by', addr)

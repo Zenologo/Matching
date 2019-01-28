@@ -1,7 +1,10 @@
-import os
+import os, sys, socket
 import sched, time, random
 from datetime import date
 from config import ReadConfig
+
+
+
 
 def path_existed():
     """ If directory is existed that mean """
@@ -59,8 +62,59 @@ print('begin example')
 
 
 conf = ReadConfig()
-print (conf.get_host())
-print (conf.is_cmd("gecko_run_catalog"))
+
+HOST = conf.get_host()
+PORT = conf.get_port()
+print (HOST)
+print (PORT)
+
+
+HOST = "127.0.0.1"
+PORT = 5008
+
+local_socket = None
+for res in socket.getaddrinfo(HOST, PORT, socket.AF_UNSPEC,
+                              socket.SOCK_STREAM, 0, socket.AI_PASSIVE):
+    af, socktype, proto, canonname, sa = res
+
+    try:
+        local_socket = socket.socket(af, socktype, proto)
+    except OSError as msg:
+        local_socket = None
+        continue
+
+    try:
+        local_socket.bind(sa)
+        local_socket.listen(1)
+    except OSError as msg:
+        local_socket.close()
+        print("Socket is closed")
+        local_socket = None
+        continue
+    break
+
+if local_socket is None:
+    print('Could not open socket')
+    sys.exit(1)
+
+print("before conn ")
+
+while True:
+    conn, addr = local_socket.accept()
+    with conn:
+        print('Connected by', addr)
+        while True:
+            data = conn.recv(1024)
+            if not data: break
+            print("recev data: ")
+            print(data)
+            print("")
+            conn.send(b"yes, what do you want to do ? ")
+
+
+
+
+
 
 
 # print(items[1])

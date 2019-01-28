@@ -14,7 +14,7 @@ class ReadConfig():
     def get_host(self):
         return self.host
 
-    def get_prot(self):
+    def get_port(self):
         return self.port
 
     def get_cmd_pwd(self):
