@@ -54,7 +54,7 @@ print('begin example')
 # Read product task then run spider
 
 
-#TODO: 1. run server for wait cmd; 
+#TODO: 1. run server for wait cmd; DONE
 #      2. if there is not cmd during 24 hours then run function automatically
 
 #run_gecko()
