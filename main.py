@@ -100,6 +100,7 @@ if local_socket is None:
 print("before conn ")
 
 while True:
+    counter = 0
     conn, addr = local_socket.accept()
     with conn:
         print('Connected by', addr)
@@ -110,6 +111,9 @@ while True:
             print(data)
             print("")
             conn.send(b"yes, what do you want to do ? ")
+    
+    
+
 
 
 
