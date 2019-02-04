@@ -1,6 +1,20 @@
 # Echo client program
 import socket
 import sys
+from config import ReadConfig
+
+
+conf = ReadConfig()
+
+for node in conf.lst_nodes:
+    print(node.id + " " + node.host + " " + node.port + " " + node.key)
+    
+
+
+
+
+
+
 
 HOST = "127.0.0.1"    # The remote host
 PORT = 5008              # The same port as used by the server
