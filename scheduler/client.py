@@ -8,7 +8,7 @@ conf = ReadConfig()
 
 for node in conf.lst_nodes:
     print(node.id + " " + node.host + " " + node.port + " " + node.key)
-    HOST = node.host    #"127.0.0.1" 
+    HOST = "localhost"    #"127.0.0.1" 
     PORT = node.port    #50008
     
     s = None
