@@ -1,10 +1,17 @@
 # Echo client program
 import socket
-import sys
+import sys, time
 from config import ReadConfig
 
 
 conf = ReadConfig()
+
+for task in conf.lst_task:
+    print(str(task.id) + " " + task.site + " " + task.type + " " + task.url + " " + time.strftime("%H:%M:%S", time.gmtime(task.run_time)))
+    
+
+
+
 
 for node in conf.lst_nodes:
     print(node.id + " " + node.host + " " + node.port + " " + node.key)

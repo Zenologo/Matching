@@ -1,9 +1,11 @@
 import configparser
+import time
 
 class ReadConfig:
     config = None
     node_available = 0
     lst_nodes = []
+    lst_task = []
 
     def __init__(self):
         self.config = configparser.ConfigParser()
@@ -11,7 +13,9 @@ class ReadConfig:
         self.port = self.config.get("Local", "port")
         self.cmd_items = self.config.items("CMD")
         self.nodes_items = self.config.items("Nodes")
+        self.tasks_items = self.config.items("Tasks")
         self.parse_node()
+        self.parse_task()
 
     def get_port(self):
         return self.port
@@ -40,6 +44,16 @@ class ReadConfig:
                 host = None
                 port = None
                 key = None
+    
+    def parse_task(self):
+        id = 0
+        for item in self.tasks_items: 
+            task_name = item[0].split("_")
+            task_url = item[1]
+            self.lst_task.append(Task(id, task_name[0], task_name[1], task_url, time.time()))
+            id += 1
+            
+
 
     def get_count_node(self):
         return len(self.lst_nodes)
@@ -58,3 +72,11 @@ class NodeDownload:
         self.port = p_port
         self.key = p_key
     
+
+class Task:
+    def __init__(self, p_id, p_site, p_type, p_url, p_time):
+        self.id = p_id
+        self.site = p_site
+        self.type = p_type
+        self.url = p_url
+        self.run_time = p_time
