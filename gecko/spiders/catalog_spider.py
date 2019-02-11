@@ -12,6 +12,7 @@ import os
 from .geckologger import GeckoLogger
 from ..items import BrandItem
 from datetime import datetime
+from .site import pharmacie1001
 
 #scrapy.Spider
 class CatalogSpider(scrapy.Spider):
@@ -29,7 +30,6 @@ class CatalogSpider(scrapy.Spider):
         self.site = self.urls[0].split('//')[-1].split('/')[0]
         if self.site[0:4] == "www.":
             self.site = self.site[4:]
-
         pos_point = self.site.find(".")
         if pos_point > 0:
             self.site = self.site[0:pos_point]
@@ -64,9 +64,45 @@ class CatalogSpider(scrapy.Spider):
         if not os.path.exists(test_path):
             os.makedirs(test_path + '')
 
-
     def parse(self, response):
         """ Parse page if sucess, if not save page's source in local """
+        brand_item = BrandItem()
+        page = response.url.split("/")[-2]
+        #self.logger.debug('page name: %s' % response.url)
+        #self.logger.debug('Response status: %s' % response.status)
+        site_parse = self.get_parse_module()
+                
+        # parse the page
+        if response.status == 200:
+            #self.logger.debug('analyser web begin')
+            self.logger.debug(response.urljoin('/catalog'))
+            
+
+
+
+            brands = site_parse.get_brands(response)
+            #response.xpath('//a[contains(@class, "link--normal")]')
+            for brand in brands:
+                brand_link = site_parse.get_brand_link(brand)
+                brand_name = site_parse.get_brand_name(brand)
+                
+                brand_item['brand_link'] = response.urljoin(brand_link)
+                brand_item['brand'] = brand_name
+                brand_item['created_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                yield brand_item
+        else:
+            filename = 'catalog-%s.html' % page
+            with open(filename, 'wb') as f:
+                f.write(response.body)
+
+
+    def get_parse_module(self):
+        if (self.site == "1001pharmacie"):
+            return pharmacie1001.Pharmacie1001()
+        
+
+"""
+    def parse(self, response):
         brand_item = BrandItem()
         page = response.url.split("/")[-2]
         #self.logger.debug('page name: %s' % response.url)
@@ -90,5 +126,5 @@ class CatalogSpider(scrapy.Spider):
             filename = 'catalog-%s.html' % page
             with open(filename, 'wb') as f:
                 f.write(response.body)
-
+"""
 
