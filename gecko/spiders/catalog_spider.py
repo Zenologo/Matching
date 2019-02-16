@@ -44,12 +44,7 @@ class CatalogSpider(scrapy.Spider):
 
     def verify_path(self, url):
         """ 
-        
         Verify site's directory,  if exists. if not create it.
-            Doc
-                [Site name]
-                    [catagory]
-                    [product]
         """
         test_path = os.path.dirname(os.path.realpath(__file__))
         #self.logger.debug('current directory: %s' %  dir_path)

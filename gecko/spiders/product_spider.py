@@ -9,6 +9,7 @@ from w3lib.html import remove_tags
 from .geckologger import GeckoLogger
 from ..items import ProductItem
 from .toolkit import check_doc_folder, get_subfolders
+from .site import pharmacie1001
 
 #scrapy.Spider
 class ProductSpider(scrapy.Spider):
@@ -77,24 +78,26 @@ class ProductSpider(scrapy.Spider):
             #self.logger.debug('analyser web begin')
             #self.logger.debug(response.urljoin('/catalog'))
             """ parse page """
-            #brand_name = response.xpath('//h2[contains(@class, "title-brand--king text--gray-medium")]/text()').extract_first()
-            #products = response.xpath('//h3[contains(@class, "title order-2")]/a/@href')
-            products = response.xpath('//h2[contains(@class, "title order-1 mb-0")]/a')
+            
+            site_parse = self.get_parse_module()
+            #products = response.xpath('//h2[contains(@class, "title order-1 mb-0")]/a')
+            products = site_parse.get_product_links(response)
+
             self.logger.debug("size of links: %s" % len(products) )
 
             for product in products:
                 #tmp_value = product.xpath(".//text()").extract_first()
                 #product_item['product_name'] = tmp_value.strip()
 
-                product_url = self.url_string + product.xpath(".//@href").extract_first()
-                #product_item['product_url'] = self.url_string + tmp_value.strip()
+                #product_url = self.url_string + product.xpath(".//@href").extract_first()
+                product_url = self.url_string + site_parse.get_product_url(product)
 
                 yield scrapy.Request(url = product_url, callback=self.parse_product)
                 #self.logger.debug(product_item['product_name'].strip())
                 #self.logger.debug(product_item['product_url'].strip())
                 #yield product_item
 
-            next_page = response.xpath('//li[contains(@class, "next")]/a/@href').extract_first()
+            next_page = site_parse.get_product_next_page(response)
             if next_page != None:
                 next_page = response.url + "/" + next_page.split("/")[-1]
                 yield scrapy.Request(url=next_page, callback=self.parse_brand)
@@ -152,3 +155,6 @@ class ProductSpider(scrapy.Spider):
             product_item['created_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             yield product_item
 
+    def get_parse_module(self):
+        if (self.site == "1001pharmacie"):
+            return pharmacie1001.Pharmacie1001()
