@@ -20,6 +20,17 @@ def path_existed():
 
 s = sched.scheduler(time.time, time.sleep)
 def run_gecko():
+    """
+    os.system('scrapy crawl catalog -a arg=https://www.1001pharmacies.com/marques')
+    print("Catalog END")
+    time.sleep(2) # Sleep 1 second
+    os.system('scrapy crawl product -a arg=https://www.1001pharmacies.com/marques')
+    print("Product END")
+    time.sleep(2) # Sleep 1 second
+    """
+    os.system('scrapy crawl catalog -a arg=https://www.monoprix.fr/courses-en-ligne')
+    print("Product END")    
+"""    
     if not path_existed():
         print("path doesn't existed")
         os.system('scrapy crawl catalog -a arg=https://www.1001pharmacies.com/marques')
@@ -33,7 +44,7 @@ def run_gecko():
     print(total)
     s.enter(total, 1 , run_gecko)
     s.run()
-
+"""
         # os.system('scrapy crawl catalog -a arg=https://www.1001pharmacies.com/marques')
         # time.sleep(1) # Sleep 1 second
         # os.system('scrapy crawl product -a arg=https://www.1001pharmacies.com/marques')
@@ -57,7 +68,7 @@ print('begin example')
 #TODO: 1. run server for wait cmd; DONE
 #      2. if there is not cmd during 24 hours then run function automatically
 
-#run_gecko()
+run_gecko()
 
 
 

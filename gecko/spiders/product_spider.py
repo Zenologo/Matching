@@ -9,7 +9,7 @@ from w3lib.html import remove_tags
 from .geckologger import GeckoLogger
 from ..items import ProductItem
 from .toolkit import check_doc_folder, get_subfolders
-from .site import pharmacie1001
+from .site import pharmacies1001
 
 #scrapy.Spider
 class ProductSpider(scrapy.Spider):
@@ -19,6 +19,7 @@ class ProductSpider(scrapy.Spider):
     dir_path = ""
     file_name = ""
     site = ""
+    site_parse = None
 
     def __init__(self, **kwarg):
         self.site = kwarg['arg']
@@ -33,6 +34,7 @@ class ProductSpider(scrapy.Spider):
         self.site = self.file_name
         self.file_name = "catalog_%s.csv" % (self.file_name)
         print("file_name: %s" % (self.file_name))
+        self.site_parse = self.get_parse_module()
 
 
     def read_brands(self):
@@ -55,9 +57,7 @@ class ProductSpider(scrapy.Spider):
         n_url = 0
         for url in urls:
             #yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
-            print("")
-            print(url)
-            print("")
+            
             pos = url['brand_link'].find("/", 11)
             if (pos != -1):
                 self.url_string = url['brand_link'][:pos]
@@ -79,9 +79,9 @@ class ProductSpider(scrapy.Spider):
             #self.logger.debug(response.urljoin('/catalog'))
             """ parse page """
             
-            site_parse = self.get_parse_module()
+
             #products = response.xpath('//h2[contains(@class, "title order-1 mb-0")]/a')
-            products = site_parse.get_product_links(response)
+            products = self.site_parse.get_product_links(response)
 
             self.logger.debug("size of links: %s" % len(products) )
 
@@ -90,14 +90,14 @@ class ProductSpider(scrapy.Spider):
                 #product_item['product_name'] = tmp_value.strip()
 
                 #product_url = self.url_string + product.xpath(".//@href").extract_first()
-                product_url = self.url_string + site_parse.get_product_url(product)
+                product_url = self.url_string + self.site_parse.get_product_url(product)
 
                 yield scrapy.Request(url = product_url, callback=self.parse_product)
                 #self.logger.debug(product_item['product_name'].strip())
                 #self.logger.debug(product_item['product_url'].strip())
                 #yield product_item
 
-            next_page = site_parse.get_product_next_page(response)
+            next_page = self.site_parse.get_product_next_page(response)
             if next_page != None:
                 next_page = response.url + "/" + next_page.split("/")[-1]
                 yield scrapy.Request(url=next_page, callback=self.parse_brand)
@@ -112,41 +112,41 @@ class ProductSpider(scrapy.Spider):
         product_item = ProductItem()
         if response.status == 200:
 
-            value = response.xpath('//h2[contains(@itemprop, "brand")]/a/span/text()').extract_first()
+            value = self.site_parse.get_product_brand_name(response)
             if value != None:
                 product_item['brand_name'] = value.strip()
 
-            value = response.xpath('//h1[@class="order-1" and @itemprop="name"]/text()').extract_first()
+            value = self.site_parse.get_product_name(response)
             if value != None:
                 product_item['name'] = value.strip()
 
             product_item['url']= response.url
 
-            value = response.xpath('//div[@itemprop="description"]').extract_first()
+            value = self.site_parse.get_product_short_description(response)
             if value != None:
                 value = remove_tags(value)
                 product_item['short_description'] = value.strip()
 
-            value = response.xpath('//div[@itemprop="weight"]/span/text()').extract_first()
+            value = self.site_parse.get_product_weight(response)
             if value != None:
                 product_item['weight'] = value.strip()
 
-            value = response.xpath('//div[@id="longDescription"]').extract_first()
+            value = self.site_parse.get_product_long_description(response)
             if value != None:
                 value = remove_tags(value)
                 product_item['long_description'] = value.strip()
 
-            value = response.xpath('//div[@id="usage"]').extract_first()
+            value = self.site_parse.get_product_usage(response)
             if value != None:
                 value = remove_tags(value)
                 product_item['usage'] = value.strip()
 
-            value = response.xpath('//div[@id="composition"]').extract_first()
+            value = self.site_parse.get_product_composition(response)
             if value != None:
                 value = remove_tags(value)
                 product_item['composition'] = value.strip()
 
-            value = response.xpath('//p[@class="price"]/meta[@itemprop="price"]/@content').extract_first()
+            value = self.site_parse.get_product_price(response)
             if value == None:
                 product_item['price'] = "INDISPONIBLE"
             else:
@@ -155,6 +155,7 @@ class ProductSpider(scrapy.Spider):
             product_item['created_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             yield product_item
 
+
     def get_parse_module(self):
-        if (self.site == "1001pharmacie"):
-            return pharmacie1001.Pharmacie1001()
+        if (self.site == "1001pharmacies"):
+            return pharmacies1001.Pharmacies1001()
