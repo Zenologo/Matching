@@ -13,13 +13,14 @@ BOT_NAME = 'gecko'
 
 SPIDER_MODULES = ['gecko.spiders']
 NEWSPIDER_MODULE = 'gecko.spiders'
+#USER_AGENT = 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36'
 
 # export fields 
 #FEED_EXPORT_FIELDS = ['brand', 'brand_link']
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'gecko (+http://www.yourdomain.com)'
+USER_AGENT = 'gecko (+https://www.monoprix.fr/courses-en-ligne)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False

@@ -8,11 +8,11 @@
 
 
 import scrapy
-import os
+import os, sys
 from .geckologger import GeckoLogger
 from ..items import BrandItem
 from datetime import datetime
-from .site import pharmacies1001
+from .site import pharmacies1001, monoprix
 
 #scrapy.Spider
 class CatalogSpider(scrapy.Spider):
@@ -23,7 +23,8 @@ class CatalogSpider(scrapy.Spider):
     site = '' 
     usrls=[]
     site_parse = None
-
+    domain = 'monoprix.fr'
+    allowed_domains = ['monoprix.fr']
     def __init__(self, **kwarg):
         self.urls = [kwarg['arg']]
 
@@ -38,12 +39,11 @@ class CatalogSpider(scrapy.Spider):
         self.site_parse = self.get_parse_module()
 
 
-
     def start_requests(self):
         # Init task site and download site
         for url in self.urls:
             self.verify_path(url)
-            yield scrapy.Request(url = url, callback = self.parse)
+            yield scrapy.Request(url = url, callback = self.parse,  meta = {'dont_redirect': True})
 
 
     def verify_path(self, url):
@@ -65,21 +65,28 @@ class CatalogSpider(scrapy.Spider):
 
     def parse(self, response):
         """ Parse page if sucess, if not save page's source in local """
+        print("begin parse")
+        print("response status: " + str(response.status))
+        print("")
+
+
         brand_item = BrandItem()
         page = response.url.split("/")[-2]
         #self.logger.debug('page name: %s' % response.url)
         #self.logger.debug('Response status: %s' % response.status)
         
-        print("")
-        print(self.site_parse)
-        print("")
+
+
         # parse the page
         if response.status == 200:
             #self.logger.debug('analyser web begin')
             self.logger.debug(response.urljoin('/catalog'))
 
             brands = self.site_parse.get_brands(response)
+            print("")
             print(brands)
+            print("")
+
             #response.xpath('//a[contains(@class, "link--normal")]')
             for brand in brands:
                 brand_link = self.site_parse.get_brand_link(brand)
@@ -99,4 +106,6 @@ class CatalogSpider(scrapy.Spider):
     def get_parse_module(self):
         if (self.site == "1001pharmacies"):
             return pharmacies1001.Pharmacies1001()
+        if(self.site == "monoprix"):
+            return monoprix.Monoprix()
         
