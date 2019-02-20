@@ -83,12 +83,12 @@ class CatalogSpider(scrapy.Spider):
             self.logger.debug(response.urljoin('/catalog'))
 
             brands = self.site_parse.get_brands(response)
-            print("")
-            print(brands)
-            print("")
-
             #response.xpath('//a[contains(@class, "link--normal")]')
             for brand in brands:
+                print("brand: ")
+                print(brand)
+                print("")
+
                 brand_link = self.site_parse.get_brand_link(brand)
                 print(brand_link)
                 brand_name = self.site_parse.get_brand_name(brand)
