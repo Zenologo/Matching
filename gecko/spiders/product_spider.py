@@ -148,6 +148,26 @@ class ProductSpider(scrapy.Spider):
             if value != None:
                 value = remove_tags(value)
                 product_item['composition'] = value.strip()
+            
+            value = self.site_parse.get_product_ingredient(response)
+            if value != None:
+                value = remove_tags(value)
+                product_item['ingredient'] = value.strip()
+            
+            value = self.site_parse.get_product_conservation(response)
+            if value != None:
+                value = remove_tags(value)
+                product_item['conservation'] = value.strip()
+
+            value = self.site_parse.get_product_nutrition(response)
+            if value != None:
+                value = remove_tags(value)
+                product_item['nutrition'] = value.strip()
+            
+            value = self.site_parse.get_product_promotion(response)
+            if value != None:
+                value = remove_tags(value)
+                product_item['promotion'] = value.strip()
 
             value = self.site_parse.get_product_price(response)
             if value == None:

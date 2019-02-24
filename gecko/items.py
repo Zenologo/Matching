@@ -27,4 +27,8 @@ class ProductItem(scrapy.Item):
     long_description = scrapy.Field()
     usage = scrapy.Field()
     composition = scrapy.Field()
+    ingredient = scrapy.Field()
+    conservation = scrapy.Field()
+    nutritionnelles = scrapy.Field()
+    promotion = scrapy.Field()
     created_time = scrapy.Field()

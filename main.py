@@ -28,7 +28,10 @@ def run_gecko():
     print("Product END")
     time.sleep(2) # Sleep 1 second
     """
-    os.system('scrapy crawl catalog -a arg=https://www.monoprix.fr/courses-en-ligne')
+    #os.system('scrapy crawl catalog -a arg=https://www.monoprix.fr/courses-en-ligne')
+    #print("Product END") 
+
+    os.system('scrapy crawl prodcut -a arg=https://www.monoprix.fr/courses-en-ligne')
     print("Product END")    
 """    
     if not path_existed():

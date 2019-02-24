@@ -8,7 +8,7 @@ class ReadConfig():
         self.config.read("conf.ini")
         self.host = self.config.get("Server", "host")
         self.port = self.config.get("Server", "port")
-        self.cmd_pwd = self.config.get("CMD", "pwd")
+        self.cmd_key = self.config.get("CMD", "key")
         self.cmd_items = self.config.items("CMD")
 
     def get_host(self):
@@ -17,8 +17,8 @@ class ReadConfig():
     def get_port(self):
         return self.port
 
-    def get_cmd_pwd(self):
-        return self.cmd_pwd
+    def get_cmd_key(self):
+        return self.cmd_key
     
     def is_cmd(self, cmd_value):
         for item in self.cmd_items:
