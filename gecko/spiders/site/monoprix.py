@@ -17,7 +17,7 @@ class Monoprix:
         return p_products.xpath('//div[contains(@class, "grocery-item withGroceryItem2Style-hgq1p8-0 cclfld")]')
     
     def get_product_url(self, p_product):
-        return p_product.xpath("//@href").extract_first()
+        return p_product.xpath('.//a[@class="grocery-item__product-img"]/@href').extract_first()
 
     def get_product_next_page(self, p_product):
         return p_product.xpath('//div[contains(@class, "next-page")]/a/@href').extract_first()
