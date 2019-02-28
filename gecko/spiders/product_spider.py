@@ -61,7 +61,7 @@ class ProductSpider(scrapy.Spider):
             pos = url['brand_link'].find("/", 11)
             if (pos != -1):
                 self.url_string = url['brand_link'][:pos]
-            if n_url == 1:
+            if n_url == 0:
                 yield scrapy.Request(url = url['brand_link'], callback=self.parse_brand)
             n_url = n_url + 1
 
@@ -78,9 +78,9 @@ class ProductSpider(scrapy.Spider):
         # parse the page
         if response.status == 200:
             #self.logger.debug('analyser web begin')
-            #self.logger.debug(response.urljoin('/catalog'))
+
             """ parse page """
-            
+            self.logger.debug(response)
             #products = response.xpath('//h2[contains(@class, "title order-1 mb-0")]/a')
             products = self.site_parse.get_product_links(response)
 
@@ -102,7 +102,8 @@ class ProductSpider(scrapy.Spider):
             next_page = self.site_parse.get_product_next_page(response)
             self.logger.debug("next page : %s" % next_page)
             if next_page != None:
-                next_page = response.url + "/" + next_page.split("/")[-1]
+                next_page = self.site_parse.get_next_page_url(self.url_string, next_page)
+                #response.url + "/" + next_page.split("/")[-1]
                 yield scrapy.Request(url=next_page, callback=self.parse_brand)
 
         else:

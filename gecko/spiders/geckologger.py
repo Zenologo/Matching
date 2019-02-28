@@ -37,7 +37,7 @@ class GeckoLogger:
         #stdout_handle.setLevel(logging.INFO)
         
         # 定义handler的输出格式 
-        formatter = logging.Formatter('%(asctime)s [%(name)s] - %(levelname)s : %(message)s')
+        formatter = logging.Formatter('%(asctime)s [%(name)s] - %(levelname)s - %(lineno)d: %(message)s')
         file_handle.setFormatter(formatter)
         #stdout_handle.setFormatter(formatter)
 

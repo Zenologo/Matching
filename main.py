@@ -33,6 +33,7 @@ def run_gecko():
 
     os.system('scrapy crawl product -a arg=https://www.monoprix.fr/courses-en-ligne')
     print("Product END")    
+
 """    
     if not path_existed():
         print("path doesn't existed")
@@ -74,7 +75,7 @@ print('begin example')
 run_gecko()
 
 
-
+"""
 conf = ReadConfig()
 
 HOST = conf.get_host()
@@ -83,8 +84,8 @@ print (HOST)
 print (PORT)
 
 
-HOST = "127.0.0.1"
-PORT = 5008
+#HOST = "127.0.0.1"
+#PORT = 5008
 
 local_socket = None
 for res in socket.getaddrinfo(HOST, PORT, socket.AF_UNSPEC,
@@ -128,14 +129,7 @@ while True:
     
     
 
-
-
-
-
-
-
-
 # print(items[1])
-
+"""
 print('end example')
 

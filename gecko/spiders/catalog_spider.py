@@ -94,12 +94,4 @@ class CatalogSpider(scrapy.Spider):
             filename = 'catalog-%s.html' % page
             with open(filename, 'wb') as f:
                 f.write(response.body)
-
-"""
-    def get_parse_module(self):
-        if (self.site == "1001pharmacies"):
-            return pharmacies1001.Pharmacies1001()
-        if(self.site == "monoprix"):
-            return monoprix.Monoprix()
-"""
-        
+ 

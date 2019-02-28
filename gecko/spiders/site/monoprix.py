@@ -14,7 +14,7 @@ class Monoprix:
         return p_brand.xpath('.//text()').extract_first()
 
     def get_product_links(self, p_products):
-        return p_products.xpath('//div[contains(@class, "grocery-item withGroceryItem2Style-hgq1p8-0 cclfld")]')
+        return p_products.xpath('//div[contains(@class, "grocery-item-item")]')
     
     def get_product_url(self, p_product):
         return p_product.xpath('.//a[@class="grocery-item__product-img"]/@href').extract_first()
@@ -57,3 +57,6 @@ class Monoprix:
     
     def get_product_price(self, p_product):
         return p_product.xpath('//div[@class="product__price"]/text()').extract_first()
+
+    def get_next_page_url(self, p_url, p_next_page):
+        return p_url + p_next_page
