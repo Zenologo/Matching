@@ -4,12 +4,10 @@ from datetime import date
 from config import ReadConfig
 
 
-
-
 def path_existed():
     """ If directory is existed that mean """
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    dir_path = dir_path + "/doc/" + date.today().isoformat()
+    dir_path = os.path.join(dir_path, "doc", date.today().isoformat())
     print(dir_path)
     if os.path.exists(dir_path) :
         return True
@@ -31,8 +29,8 @@ def run_gecko():
     #os.system('scrapy crawl catalog -a arg=https://www.monoprix.fr/courses-en-ligne')
     #print("Product END") 
 
-    os.system('scrapy crawl product -a arg=https://www.monoprix.fr/courses-en-ligne')
-    print("Product END")    
+    #os.system('scrapy crawl product -a arg=https://www.monoprix.fr/courses-en-ligne')
+    #print("Product END")    
 
 """    
     if not path_existed():
