@@ -51,6 +51,12 @@ def run_gecko():
         # time.sleep(1) # Sleep 1 second
         # os.system('scrapy crawl product -a arg=https://www.1001pharmacies.com/marques')
 
+def run_Lastname_french():
+    os.system('scrapy crawl product -a arg=https://www.filae.com/nom-de-famille/classement-general-1')
+    os.system('scrapy crawl product -a arg=https://www.geneanet.org/genealogie/?page=1')
+    
+
+
 print('begin example')
 
 #Todo: 1. Scan the folder "doc" and verify the name of sub-folder.
