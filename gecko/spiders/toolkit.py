@@ -3,7 +3,7 @@ All function are using for the project.
 """
 
 import os
-from .site import pharmacies1001, monoprix
+from .site import pharmacies1001, monoprix, filae
 
 def check_doc_folder():
     """
@@ -36,3 +36,5 @@ def get_parse_module(p_site):
         return pharmacies1001.Pharmacies1001()
     if(p_site == "monoprix"):
         return monoprix.Monoprix()
+    if(p_site == "filae"):
+        return filae.Filae()

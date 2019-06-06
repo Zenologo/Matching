@@ -32,3 +32,9 @@ class ProductItem(scrapy.Item):
     nutritionnelles = scrapy.Field()
     promotion = scrapy.Field()
     created_time = scrapy.Field()
+
+class LastnameItem(scrapy.Item):
+    lastname = scrapy.Field()
+    brand_link = scrapy.Field()
+    created_time = scrapy.Field()
+
