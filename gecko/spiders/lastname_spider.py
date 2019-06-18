@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 #  For Lastname french
 
+"""
+    Todo: Complete this file later.
+"""
+
 import scrapy
 import os
 import csv
@@ -67,10 +71,10 @@ class LastnameSpider(scrapy.Spider):
                 print(brand_link)
                 brand_name = self.site_parse.get_brand_name(brand)
                 print(brand_name)
-                brand_item['brand_link'] = response.urljoin(brand_link)
-                brand_item['brand'] = brand_name
-                brand_item['created_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                yield brand_item
+                lastname_item['brand_link'] = response.urljoin(brand_link)
+                lastname_item['brand'] = brand_name
+                lastname_item['created_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                yield lastname_item
         else:
             filename = 'catalog-%s.html' % page
             with open(filename, 'wb') as f:
